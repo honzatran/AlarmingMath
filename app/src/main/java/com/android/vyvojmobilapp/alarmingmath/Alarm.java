@@ -7,6 +7,7 @@ import android.net.Uri;
  */
 public class Alarm {
     int hour, minute;
+    long id;
 
     public static String HOUR = "hour";
     public static String MINUTES = "minutes";
@@ -30,6 +31,14 @@ public class Alarm {
 
     public void setMinute(int minute) {
         this.minute = minute;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

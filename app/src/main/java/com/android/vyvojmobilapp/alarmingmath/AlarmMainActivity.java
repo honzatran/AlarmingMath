@@ -11,35 +11,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 
 public class AlarmMainActivity extends ActionBarActivity {
     List<Alarm> alarms;
     ListView alarmListView;
+    AlarmDatabase alarmDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // tady bude potreba nejaka databaze sqlite ci co
-        alarms = new ArrayList<>();
-        alarms.add(new Alarm(14, 13));
+        alarmDatabase = new AlarmDatabase(this);
+        alarms = alarmDatabase.getAlarms();
+        if (alarms == null) {
+            alarms = new ArrayList<>();
+        }
 
         Intent intent = getIntent();
         Bundle bundles = intent.getExtras();
         if (intent.hasExtra(Alarm.HOUR) && intent.hasExtra(Alarm.MINUTES))
         {
             Alarm newAlarm = new Alarm(bundles.getInt(Alarm.HOUR), bundles.getInt(Alarm.MINUTES));
+            long id = alarmDatabase.addAlarm(newAlarm);
+            newAlarm.setId(id);
             alarms.add(newAlarm);
             setAlarm(newAlarm);
         }
@@ -49,15 +50,10 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         alarmListView = (ListView)findViewById(R.id.alarm_list);
         alarmListView.setAdapter(alarmArrayAdapter);
-
     }
 
     private void setAlarm(Alarm newAlarm) {
         Calendar cal = Calendar.getInstance();
-//        int diff = newAlarm.getHour() * 60 + newAlarm.getMinute() - cal.get(Calendar.HOUR_OF_DAY) * 60
-//                - cal.get(Calendar.MINUTE);
-
-//        Log.d("diff", String.valueOf(diff));
 
         if (newAlarm.getHour() >= cal.get(Calendar.HOUR_OF_DAY) &&
                 newAlarm.getMinute() > cal.get(Calendar.MINUTE)) {
@@ -65,18 +61,22 @@ public class AlarmMainActivity extends ActionBarActivity {
             cal.set(Calendar.MINUTE, newAlarm.getMinute());
             cal.set(Calendar.SECOND, 0);
 
-            Intent intent = new Intent(getApplicationContext(), AlarmManagerHelper.class);
-            PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 156,
-                    intent, 0);
-
-            Context context = getApplicationContext();
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-
-            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
         } else {
-            String msg = "not implemented";
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            cal.set(Calendar.DAY_OF_WEEK, (currentDay + 1) % 7);
+            cal.set(Calendar.HOUR_OF_DAY, newAlarm.getHour());
+            cal.set(Calendar.MINUTE, newAlarm.getMinute());
+            cal.set(Calendar.SECOND, 0);
         }
+
+        Intent intent = new Intent(getApplicationContext(), AlarmManagerHelper.class);
+        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 156,
+                intent, 0);
+
+        Context context = getApplicationContext();
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
     }
 
 
@@ -103,7 +103,7 @@ public class AlarmMainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showCreateAlarm(View view) {
+    public void showCreateAlarmActivity(View view) {
         Intent intent = new Intent(this, AlarmCreateActivity.class);
         startActivity(intent);
     }
