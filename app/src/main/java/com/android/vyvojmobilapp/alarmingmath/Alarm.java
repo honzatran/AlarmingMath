@@ -17,6 +17,12 @@ public class Alarm {
         this.minute = minute;
     }
 
+    public Alarm(int hour, int minute, long id) {
+        this.hour = hour;
+        this.minute = minute;
+        this.id = id;
+    }
+
     public int getHour() {
         return hour;
     }

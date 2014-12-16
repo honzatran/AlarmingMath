@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+// dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
 
 public class AlarmMainActivity extends ActionBarActivity {
     List<Alarm> alarms;
@@ -38,9 +39,12 @@ public class AlarmMainActivity extends ActionBarActivity {
         Bundle bundles = intent.getExtras();
         if (intent.hasExtra(Alarm.HOUR) && intent.hasExtra(Alarm.MINUTES))
         {
+            // vratil jsem se obrazovky vytvoreni budiku
+            // pridam novy do databaze
             Alarm newAlarm = new Alarm(bundles.getInt(Alarm.HOUR), bundles.getInt(Alarm.MINUTES));
             long id = alarmDatabase.addAlarm(newAlarm);
             newAlarm.setId(id);
+            // spustim ho
             alarms.add(newAlarm);
             setAlarm(newAlarm);
         }
@@ -69,13 +73,16 @@ public class AlarmMainActivity extends ActionBarActivity {
             cal.set(Calendar.SECOND, 0);
         }
 
+        // nastavi indent
         Intent intent = new Intent(getApplicationContext(), AlarmManagerHelper.class);
+        // indent vydrzi i konec aplikace
         PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 156,
                 intent, 0);
 
         Context context = getApplicationContext();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
 
+        // naplanuje budik na spravnej cas
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
     }
 

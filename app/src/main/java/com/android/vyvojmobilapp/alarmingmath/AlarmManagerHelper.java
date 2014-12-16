@@ -19,28 +19,12 @@ public class AlarmManagerHelper extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // tady prijme budik ktery zrovna zvoni
         String gotIt = "GOT IT";
         Toast.makeText(context, gotIt, Toast.LENGTH_LONG).show();
+        // spusti obrazovku ze zvoni budik
         Intent responseIntent = new Intent(context, AlarmResponse.class);
         responseIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(responseIntent);
-    }
-
-    public static void setAlarm(Context context) {
-    }
-
-    public static void cancelAlarm(Context context) {
-
-    }
-
-    private static PendingIntent createPendingIntent(Context context, Alarm alarm) {
-        Intent intent = new Intent(context, AlarmService.class);
-//        intent.putExtra(ID, alarm.id);
-//        intent.putExtra(NAME, alarm.name);
-        intent.putExtra(TIMEHOUR, alarm.getHour());
-        intent.putExtra(TIMEMINUTE, alarm.getMinute());
-//        intent.putExtra(TONE, alarm.tone.toString());
-
-        return PendingIntent.getService(context, 52, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

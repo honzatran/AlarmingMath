@@ -10,6 +10,7 @@ import android.widget.Toast;
  * Created by honza on 12/15/14.
  */
 public class AlarmService extends Service {
+    // opsany z netu zatim zadna funkcnost
     public static String TAG = AlarmService.class.getName();
 
     @Override
@@ -19,15 +20,6 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        AlarmManagerHelper.setAlarm(this);
-        System.out.println("start");
-
-        Log.d("AlarmService", "on start cmd");
-        Toast.makeText(getApplicationContext(), intent.getExtras().getInt("HOUR") +
-                " " + intent.getExtras().getInt("MINUTE"), Toast.LENGTH_LONG).show();
-
-        getApplication().startService(intent);
-
-        return super.onStartCommand(intent, flags, startId);
+        return -1;
     }
 }
