@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="snoozeDelaySpinnerItems">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+    <string-array name="lengthOfRingingSpinnerItems">
+        <item>30 vteřin</item>
+        <item>1 minuta</item>
+        <item>1 minuta 30 vteřin</item>
+        <item>2 minuty</item>
+        <item>do vypnutí</item>
+    </string-array>
+    <string-array name="methodSpinnerItems">
+        <item>tlačítkem</item>
+        <item>vyřešením matematického příkladu</item>
+        <item>naskenováním QR kódu</item>
+    </string-array>
+</resources>

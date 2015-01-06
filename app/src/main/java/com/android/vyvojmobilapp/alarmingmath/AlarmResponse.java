@@ -1,9 +1,12 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 
 
 public class AlarmResponse extends ActionBarActivity {
@@ -14,6 +17,17 @@ public class AlarmResponse extends ActionBarActivity {
         setContentView(R.layout.activity_alarm_response);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //je treba zajistit, aby se pri buzeni rozsvitila a odemknula obrazovka
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,5 +49,18 @@ public class AlarmResponse extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void dismissAlarm(View view) {
+        //propoustime wakelock - dulezite, jinak by nam to mohlo silne drainovat baterii
+        WakeLocker.release();
+        //taky vycistime flags, ktere jsme nastavili v onResume
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        //... a vratime se na hlavni obrazovku
+        Intent intent = new Intent(this, AlarmMainActivity.class);
+        startActivity(intent);
     }
 }

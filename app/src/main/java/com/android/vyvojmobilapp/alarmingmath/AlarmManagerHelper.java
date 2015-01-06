@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
@@ -20,6 +21,9 @@ public class AlarmManagerHelper extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         // tady prijme budik ktery zrovna zvoni
+
+        //je potreba zajistit wakelock, jinak se muze stat, ze se aktivita AlarmResponse vubec nespusti... wakelock releasuje AlarmResponse (!important)
+        WakeLocker.acquire(context);
         String gotIt = "GOT IT";
         Toast.makeText(context, gotIt, Toast.LENGTH_LONG).show();
         // spusti obrazovku ze zvoni budik
