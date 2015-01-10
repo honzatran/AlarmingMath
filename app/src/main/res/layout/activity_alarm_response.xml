@@ -10,7 +10,7 @@
         android:id="@+id/alarm_ringing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20pt"/>
+        android:textSize="12pt"/>
     <Button
         android:id="@+id/dismiss_alarm"
         android:text="@string/dismiss_alarm"

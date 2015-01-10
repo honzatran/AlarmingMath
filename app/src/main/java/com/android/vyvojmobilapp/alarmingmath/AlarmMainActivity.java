@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.*;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -43,30 +41,7 @@ public class AlarmMainActivity extends ActionBarActivity {
             alarms = new ArrayList<>();
         }
 
-        Intent intent = getIntent();
-        Bundle bundles = intent.getExtras();
-        if (intent.hasExtra(Alarm.HOUR) && intent.hasExtra(Alarm.MINUTES))
-        {
-            // vratil jsem se obrazovky vytvoreni budiku
-            // pridam novy do databaze
-            Alarm newAlarm = new Alarm(
-                    bundles.getInt(Alarm.HOUR),
-                    bundles.getInt(Alarm.MINUTES),
-                    bundles.getInt(Alarm.RINGTONE),
-                    bundles.getInt(Alarm.SNOOZE_DELAY),
-                    bundles.getInt(Alarm.LENGTH_OF_RINGING),
-                    bundles.getInt(Alarm.METHOD_ID),
-                    bundles.getInt(Alarm.VOLUME),
-                    bundles.getBoolean(Alarm.IS_ACTIVE),
-                    bundles.getBoolean(Alarm.IS_VIBRATE),
-                    bundles.getString(Alarm.NAME)
-            );
-            long id = alarmDatabase.addAlarm(newAlarm);
-            newAlarm.setId(id);
-            // spustim ho
-            alarms.add(newAlarm);
-            setAlarm(newAlarm);
-        }
+
 
         alarmArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 alarms);
@@ -77,6 +52,29 @@ public class AlarmMainActivity extends ActionBarActivity {
         //registrujeme tridy AlarmMainActivity jako obsluznou pro alarmListView (metody jsou nize)
         registerForContextMenu(alarmListView);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        Bundle bundles = intent.getExtras();
+        if (intent.hasExtra(Alarm.ALARM_FLAG))
+        {
+            // vratil jsem se obrazovky vytvoreni budiku
+            // pridam novy do databaze
+            Alarm newAlarm = intent.getExtras().getParcelable(Alarm.ALARM_FLAG);
+
+            long id = alarmDatabase.addAlarm(newAlarm);
+            newAlarm.setId(id);
+            alarms.add(newAlarm);
+
+            // spustim ho
+            if(newAlarm.isActive()){
+                setAlarm(newAlarm);
+            }
+
+        }
     }
 
     //vytvoreni kontextoveho menu pro poloznky v seznamu budiku
@@ -107,7 +105,8 @@ public class AlarmMainActivity extends ActionBarActivity {
             case 1: //Details
                 Toast.makeText(this, "Info:\nČas: "+alarm.toString()+
                                 "\nName: "+alarm.getName()+
-                                "\nRingtone: "+alarm.getRingtoneId()+
+                                "\nid: "+alarm.getId()+
+                                "\nRingtone: "+alarm.getRingtoneUri()+
                                 "\nSnooze delay: "+alarm.getSnoozeDelay()+
                                 "\nLength of ringing: "+alarm.getLengthOfRinging()+
                                 "\nMethod: "+alarm.getMethodId()+
@@ -148,6 +147,8 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         // nastavi indent
         Intent intent = new Intent(getApplicationContext(), AlarmManagerHelper.class);
+        intent.putExtra(Alarm.ALARM_FLAG, newAlarm);
+
         // indent vydrzi i konec aplikace
         PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 156,
                 intent, 0);

@@ -1,82 +1,108 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.android.vyvojmobilapp.alarmingmath.AlarmCreateActivity">
 
-    <TimePicker
-        android:id="@+id/alarm_time_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name_field"
-        android:layout_below="@+id/alarm_time_picker"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="@string/alarmNameHint"
-        android:layout_alignRight="@+id/alarm_time_picker"
-        android:layout_alignEnd="@+id/alarm_time_picker" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="com.android.vyvojmobilapp.alarmingmath.AlarmCreateActivity">
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="active"
-        android:id="@+id/active_switch"
-        android:layout_below="@+id/name_field"
-        />
+        <TimePicker
+            android:id="@+id/alarm_time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="vibrate"
-        android:id="@+id/vibrate_switch"
-        android:layout_below="@+id/active_switch"
-        />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/name_field"
+            android:layout_below="@+id/alarm_time_picker"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="@string/alarmNameHint"
+            android:layout_alignRight="@+id/alarm_time_picker"
+            android:layout_alignEnd="@+id/alarm_time_picker" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/vibrate_switch"
-        android:id="@+id/snoozeDelay_spinner"
-        android:entries="@array/snoozeDelaySpinnerItems"
-        android:spinnerMode="dropdown" />
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/snoozeDelay_spinner"
-        android:id="@+id/lengthOfRinging_spinner"
-        android:entries="@array/lengthOfRingingSpinnerItems"
-        android:spinnerMode="dropdown" />
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lengthOfRinging_spinner"
-        android:id="@+id/method_spinner"
-        android:entries="@array/methodSpinnerItems"
-        android:spinnerMode="dropdown" />
-    <SeekBar
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/method_spinner"
-        android:id="@+id/volumeSeekBar"
-        android:layout_width="fill_parent"
-        android:max="100"
-        />
-    <Button
-        android:id="@+id/button_create_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_alarm"
-        android:onClick="createAlarm"
-        android:layout_below="@+id/volumeSeekBar"
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="active"
+            android:checked="true"
+            android:id="@+id/active_switch"
+            android:layout_below="@+id/name_field"
+            />
 
-        />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="vibrate"
+            android:checked="true"
+            android:id="@+id/vibrate_switch"
+            android:layout_below="@+id/active_switch"
+            />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vibrate_switch"
+            android:id="@+id/snoozeDelay_spinner"
+            android:entries="@array/snoozeDelaySpinnerItems"
+            android:spinnerMode="dropdown" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/snoozeDelay_spinner"
+            android:id="@+id/lengthOfRinging_spinner"
+            android:entries="@array/lengthOfRingingSpinnerItems"
+            android:spinnerMode="dropdown" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lengthOfRinging_spinner"
+            android:id="@+id/method_spinner"
+            android:entries="@array/methodSpinnerItems"
+            android:spinnerMode="dropdown" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/method_spinner"
+            android:id="@+id/difficulty_spinner"
+            android:entries="@array/difficultySpinnerItems"
+            android:spinnerMode="dropdown" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/difficulty_spinner"
+            android:text="Vyberte vyzvánění..."
+            android:onClick="onRingtonePickerClick"
+            android:id="@+id/ringtonePicker"
+            />
+
+        <SeekBar
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ringtonePicker"
+            android:id="@+id/volumeSeekBar"
+            android:layout_width="fill_parent"
+            android:progress="75"
+            android:max="100"
+            />
+        <Button
+            android:id="@+id/volumeBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_alarm"
+            android:onClick="createAlarm"
+            android:layout_below="@+id/volumeSeekBar"
+
+            />
 
 
 
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

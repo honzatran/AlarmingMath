@@ -9,10 +9,11 @@ public class AlarmDtbColumns implements BaseColumns{
     public static String name = "AlarmTable";
     public static String column_hour = "hour";
     public static String column_minute = "minute";
-    public static String column_ringtoneId = "ringtoneId";
+    public static String column_ringtoneUri = "ringtoneUri";
     public static String column_snoozeDelay = "snoozeDelay";
     public static String column_lengthOfRinging = "lengthOfRinging";
     public static String column_methodId = "methodId";
+    public static String column_difficulty = "difficulty";
     public static String column_volume = "volume";
     public static String column_active = "active";
     public static String column_vibrate = "vibrate";

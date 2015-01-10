@@ -24,11 +24,16 @@ public class AlarmManagerHelper extends BroadcastReceiver{
 
         //je potreba zajistit wakelock, jinak se muze stat, ze se aktivita AlarmResponse vubec nespusti... wakelock releasuje AlarmResponse (!important)
         WakeLocker.acquire(context);
-        String gotIt = "GOT IT";
-        Toast.makeText(context, gotIt, Toast.LENGTH_LONG).show();
+
         // spusti obrazovku ze zvoni budik
+
         Intent responseIntent = new Intent(context, AlarmResponse.class);
         responseIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        responseIntent.putExtras(intent.getExtras());
+
+        String gotIt = ((Alarm)intent.getParcelableExtra(Alarm.ALARM_FLAG)).toString();
+        Toast.makeText(context, gotIt, Toast.LENGTH_LONG).show();
+
         context.startActivity(responseIntent);
     }
 }

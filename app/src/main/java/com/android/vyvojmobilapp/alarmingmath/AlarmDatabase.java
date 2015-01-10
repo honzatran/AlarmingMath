@@ -22,10 +22,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                     AlarmDtbColumns._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     AlarmDtbColumns.column_hour + " INTEGER, " +
                     AlarmDtbColumns.column_minute + " INTEGER, " +
-                    AlarmDtbColumns.column_ringtoneId + " INTEGER, " +
+                    AlarmDtbColumns.column_ringtoneUri + " TEXT, " +
                     AlarmDtbColumns.column_snoozeDelay + " INTEGER, " +
                     AlarmDtbColumns.column_lengthOfRinging + " INTEGER, " +
                     AlarmDtbColumns.column_methodId + " INTEGER, " +
+                    AlarmDtbColumns.column_difficulty + " INTEGER, " +
                     AlarmDtbColumns.column_volume + " INTEGER, " +
                     AlarmDtbColumns.column_active + " BOOLEAN, " +
                     AlarmDtbColumns.column_vibrate + " BOOLEAN, " +
@@ -53,10 +54,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(AlarmDtbColumns.column_hour, alarm.getHour());
         values.put(AlarmDtbColumns.column_minute, alarm.getMinute());
-        values.put(AlarmDtbColumns.column_ringtoneId, alarm.getRingtoneId());
+        values.put(AlarmDtbColumns.column_ringtoneUri, alarm.getRingtoneUri());
         values.put(AlarmDtbColumns.column_snoozeDelay, alarm.getSnoozeDelay());
         values.put(AlarmDtbColumns.column_lengthOfRinging, alarm.getLengthOfRinging());
         values.put(AlarmDtbColumns.column_methodId, alarm.getMethodId());
+        values.put(AlarmDtbColumns.column_difficulty, alarm.getDifficulty());
         values.put(AlarmDtbColumns.column_volume, alarm.getVolume());
         values.put(AlarmDtbColumns.column_active, alarm.isActive());
         values.put(AlarmDtbColumns.column_vibrate, alarm.isVibrate());
@@ -119,15 +121,16 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     private Alarm convertToAlarm(Cursor c) {
         int hour = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_hour));
         int minutes = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_minute));
-        int ringtoneId = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_ringtoneId));
+        String ringtoneUri = c.getString(c.getColumnIndex(AlarmDtbColumns.column_ringtoneUri));
         int snoozeDelay = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_snoozeDelay));
         int lengthOfRinging = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_lengthOfRinging));
         int methodId = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_methodId));
+        int difficulty = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_difficulty));
         int volume = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_volume));
         boolean active = (c.getInt(c.getColumnIndex(AlarmDtbColumns.column_active)) != 0);
         boolean vibrate = (c.getInt(c.getColumnIndex(AlarmDtbColumns.column_vibrate)) != 0);
         String name = c.getString(c.getColumnIndex(AlarmDtbColumns.column_name));
         long id = c.getLong(c.getColumnIndex(AlarmDtbColumns._ID));
-        return new Alarm(hour, minutes, id, ringtoneId,snoozeDelay,lengthOfRinging, methodId, volume, active, vibrate, name);
+        return new Alarm(hour, minutes, id, ringtoneUri, snoozeDelay, lengthOfRinging, methodId, difficulty, volume, active, vibrate, name);
     }
 }
