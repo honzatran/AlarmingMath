@@ -1,6 +1,7 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -10,7 +11,7 @@ import android.widget.Toast;
  * Created by honza on 12/15/14.
  */
 public class AlarmService extends Service {
-    // opsany z netu zatim zadna funkcnost
+    // honza opsany z netu
     public static String TAG = AlarmService.class.getName();
 
     @Override
@@ -20,6 +21,23 @@ public class AlarmService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return -1;
+        // tady prijme budik ktery zrovna zvoni
+
+        //je potreba zajistit wakelock, jinak se muze stat, ze se aktivita AlarmResponse vubec nespusti... wakelock releasuje AlarmResponse (!important)
+        Log.v(TAG, "service start");
+        // spusti obrazovku ze zvoni budik
+
+        // honza: spusti activity alarm response
+        Intent responseIntent = new Intent(getBaseContext(), AlarmResponse.class);
+        responseIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        responseIntent.putExtras(intent.getExtras());
+
+        String gotIt = ((Alarm)intent.getParcelableExtra(Alarm.ALARM_FLAG)).toString();
+        Toast.makeText(getApplicationContext(), gotIt, Toast.LENGTH_LONG).show();
+        getApplication().startActivity(responseIntent);
+
+        // honza: nastavi vsechny dalsi budiky
+        AlarmManagerHelper.startAlarmPendingIntent(this);
+        return super.onStartCommand(intent, flags, startId);
     }
 }

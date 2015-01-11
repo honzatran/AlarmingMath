@@ -84,6 +84,12 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         );
     }
 
+    public void deleteAll() {
+        getWritableDatabase().execSQL(
+                "delete from " + AlarmDtbColumns.name
+        );
+    }
+
     public Alarm getAlarm(long id) {
         // neozkouseny
         SQLiteDatabase dtb = getReadableDatabase();

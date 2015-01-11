@@ -13,6 +13,14 @@
         android:layout_height="wrap_content"
         android:onClick="showCreateAlarm"/>
 
+    <Button
+        android:id="@+id/delete_all"
+        android:text="@string/delete_all"
+        android:layout_toRightOf="@id/create_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="clearAlarms" />
+
     <ListView
         android:id = "@+id/alarm_list"
         android:layout_width="wrap_content"

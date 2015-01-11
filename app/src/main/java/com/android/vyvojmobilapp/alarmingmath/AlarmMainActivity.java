@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.*;
 import android.view.Menu;
@@ -21,28 +23,24 @@ import java.util.List;
 
 // dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
 
+// TODO podpora budiku v ruznych dnech, aktivace a deaktivace budiku + zabudovani mechanismu pro ruzny response
 public class AlarmMainActivity extends ActionBarActivity {
-    List<Alarm> alarms;
+    private String TAG = "MAIN ACTIVITY";
     ListView alarmListView;
-    AlarmDatabase alarmDatabase;
+    AlarmContainer alarms;
     ArrayAdapter<Alarm> alarmArrayAdapter;
+    int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        alarmDatabase = new AlarmDatabase(this);
+        AlarmDatabase alarmDatabase = new AlarmDatabase(this);
 
         //--debugging purposes
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
 
-        alarms = alarmDatabase.getAlarms();
-        if (alarms == null) {
-            alarms = new ArrayList<>();
-        }
-
-
-
+        alarms = new AlarmContainer(alarmDatabase);
         alarmArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 alarms);
 
@@ -51,30 +49,12 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         //registrujeme tridy AlarmMainActivity jako obsluznou pro alarmListView (metody jsou nize)
         registerForContextMenu(alarmListView);
-
+        counter = 42;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = getIntent();
-        Bundle bundles = intent.getExtras();
-        if (intent.hasExtra(Alarm.ALARM_FLAG))
-        {
-            // vratil jsem se obrazovky vytvoreni budiku
-            // pridam novy do databaze
-            Alarm newAlarm = intent.getExtras().getParcelable(Alarm.ALARM_FLAG);
-
-            long id = alarmDatabase.addAlarm(newAlarm);
-            newAlarm.setId(id);
-            alarms.add(newAlarm);
-
-            // spustim ho
-            if(newAlarm.isActive()){
-                setAlarm(newAlarm);
-            }
-
-        }
     }
 
     //vytvoreni kontextoveho menu pro poloznky v seznamu budiku
@@ -116,10 +96,11 @@ public class AlarmMainActivity extends ActionBarActivity {
                                 , Toast.LENGTH_LONG).show();
                 break;
             case 2: //delete
-                alarmDatabase.deleteAlarm(alarm.getId());
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important
                 Toast.makeText(this, "Budík v čase "+alarm.toString()+" smazán.", Toast.LENGTH_SHORT).show();
+                AlarmManagerHelper.startAlarmPendingIntent(this);
                 break;
             default:
 
@@ -128,37 +109,6 @@ public class AlarmMainActivity extends ActionBarActivity {
         return true;
     }
 
-    private void setAlarm(Alarm newAlarm) {
-        Calendar cal = Calendar.getInstance();
-
-        if (newAlarm.getHour() >= cal.get(Calendar.HOUR_OF_DAY) &&
-                newAlarm.getMinute() > cal.get(Calendar.MINUTE)) {
-            cal.set(Calendar.HOUR_OF_DAY, newAlarm.getHour());
-            cal.set(Calendar.MINUTE, newAlarm.getMinute());
-            cal.set(Calendar.SECOND, 0);
-
-        } else {
-            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-            cal.set(Calendar.DAY_OF_WEEK, (currentDay + 1) % 7);
-            cal.set(Calendar.HOUR_OF_DAY, newAlarm.getHour());
-            cal.set(Calendar.MINUTE, newAlarm.getMinute());
-            cal.set(Calendar.SECOND, 0);
-        }
-
-        // nastavi indent
-        Intent intent = new Intent(getApplicationContext(), AlarmManagerHelper.class);
-        intent.putExtra(Alarm.ALARM_FLAG, newAlarm);
-
-        // indent vydrzi i konec aplikace
-        PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 156,
-                intent, 0);
-
-        Context context = getApplicationContext();
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-
-        // naplanuje budik na spravnej cas
-        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-    }
 
 
 
@@ -185,7 +135,32 @@ public class AlarmMainActivity extends ActionBarActivity {
     }
 
     public void showCreateAlarm(View view) {
+        Log.v(TAG, "create pressed");
+
         Intent intent = new Intent(this, AlarmCreateActivity.class);
-        startActivity(intent);
+        // honza: ceka na vysledek aktivity vytvor budik
+        startActivityForResult(intent, 1);
+    }
+
+    public void clearAlarms(View view) {
+        AlarmManagerHelper.cancelAlarmPendingIntents(this);
+        alarms.clear();
+        alarmArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
+                // honza: dosel novej budik
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
+                Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
+                alarms.add(newAlarm);
+                alarmArrayAdapter.notifyDataSetChanged();
+                AlarmManagerHelper.startAlarmPendingIntent(this);
+            }
+        }
     }
 }

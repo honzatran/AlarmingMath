@@ -6,6 +6,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,8 @@ public class AlarmCreateActivity extends ActionBarActivity {
     SeekBar volumeSeekbar;
     Uri uri = null;
 
+    private static String TAG = "Alarm";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +53,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
         methodSpinner = (Spinner)findViewById(R.id.method_spinner);
         difficultySpinner = (Spinner)findViewById(R.id.difficulty_spinner);
         volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
-
     }
 
     @Override
@@ -88,13 +90,20 @@ public class AlarmCreateActivity extends ActionBarActivity {
         int method = methodSpinner.getSelectedItemPosition();
         int difficulty = difficultySpinner.getSelectedItemPosition();
         int volume = volumeSeekbar.getProgress();
-        String ringtoneUri = (uri == null) ? "" : uri.toString();
+
+
+        if (uri == null) {
+            uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        }
+
+        String ringtoneUri = uri.toString();
 
         Alarm alarm = new Alarm(hour, minute, ringtoneUri, snoozeDelay, lengthOfRinging, method, difficulty, volume, active, vibrate, name);
 
         Intent intent = new Intent(this, AlarmMainActivity.class);
         intent.putExtra(Alarm.ALARM_FLAG, alarm);
-        startActivity(intent);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public void onRingtonePickerClick(View view) {
@@ -111,6 +120,10 @@ public class AlarmCreateActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == RESULT_OK) {
             uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            if (uri == null)
+            {
+                Log.v(TAG, "returned uri is null");
+            }
             final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
             ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
         }

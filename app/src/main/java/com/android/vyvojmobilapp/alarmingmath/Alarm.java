@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Calendar;
+
 /**
  * Created by honza on 12/15/14.
  */
@@ -171,4 +173,5 @@ public class Alarm implements Parcelable {
             return new Alarm[size];
         }
     };
+
 }
