@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -17,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -52,6 +54,24 @@ public class AlarmCreateActivity extends ActionBarActivity {
         lengthOfRingingSpinner = (Spinner)findViewById(R.id.lengthOfRinging_spinner);
         methodSpinner = (Spinner)findViewById(R.id.method_spinner);
         difficultySpinner = (Spinner)findViewById(R.id.difficulty_spinner);
+
+        methodSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == 0) {
+                            difficultySpinner.setEnabled(true);
+                        } else {
+                            difficultySpinner.setEnabled(false);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        difficultySpinner.setEnabled(false);
+                    }
+                }
+        );
         volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
     }
 
@@ -127,7 +147,5 @@ public class AlarmCreateActivity extends ActionBarActivity {
             final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
             ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
         }
-
-
     }
 }

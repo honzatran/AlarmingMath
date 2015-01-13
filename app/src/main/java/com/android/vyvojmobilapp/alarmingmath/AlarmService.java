@@ -40,4 +40,10 @@ public class AlarmService extends Service {
         AlarmManagerHelper.startAlarmPendingIntent(this);
         return super.onStartCommand(intent, flags, startId);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "destroyed");
+    }
 }

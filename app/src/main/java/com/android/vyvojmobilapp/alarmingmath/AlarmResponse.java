@@ -1,5 +1,6 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 import android.os.Vibrator;
 
 
-public class AlarmResponse extends ActionBarActivity {
+public class AlarmResponse extends Activity {
     Vibrator v;
     private MediaPlayer player;
     private String TAG = AlarmResponse.class.getName();
@@ -159,6 +160,10 @@ public class AlarmResponse extends ActionBarActivity {
 //        Intent intent = new Intent(this, AlarmMainActivity.class);
 //        startActivity(intent);
         // honza : ukoncime aktivitu
+        stopService(new Intent(getApplicationContext(), AlarmService.class));
         finish();
+    }
+
+    public void snoozeAlarm(View view) {
     }
 }

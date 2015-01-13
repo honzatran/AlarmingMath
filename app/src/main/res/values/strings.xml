@@ -12,5 +12,6 @@
     <string name="alarm_ring">Alarm is ringing!</string>
     <string name="alarmNameHint">nazev budiku</string>
     <string name="delete_all">Clear alarms</string>
+    <string name="snooze_alarm">Snooze</string>
 
 </resources>
