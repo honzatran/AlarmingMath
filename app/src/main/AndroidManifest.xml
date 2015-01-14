@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <receiver
         android:name=".AlarmReceiver"
@@ -46,9 +45,18 @@
         </activity>
         <activity
             android:name=".AlarmResponse"
-            android:label="@string/title_activity_alarm_response"
-            >
+            android:label="@string/title_activity_alarm_response" >
         </activity>
+        <activity
+            android:name=".AlarmResponseQR"
+            android:label="@string/title_activity_alarm_response_qr" >
+        </activity>
+
+        <service
+            android:name=".RingtonePlayerService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

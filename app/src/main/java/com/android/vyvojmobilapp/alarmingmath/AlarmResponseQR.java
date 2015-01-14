@@ -6,42 +6,48 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 
-public class AlarmResponse extends Activity {
+public class AlarmResponseQR extends Activity {
+    private static final String BUTTONS_VISIBILITY = "buttonsVisibility";
+    private int WAKELOCK_TIMEOUT = 60 * 1000;
+    private String item;
+    private String corr_qr_code;
     private String TAG = AlarmResponse.class.getName();
     private PowerManager.WakeLock mWakeLock;
+    private View buttonsView;
 
-    private int WAKELOCK_TIMEOUT = 60 * 1000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_response);
+        setContentView(R.layout.activity_alarm_response_qr);
+        buttonsView = findViewById(R.id.buttons);
 
         Intent intent = getIntent();
         Bundle bundles = intent.getExtras();
         Alarm alarm = bundles.getParcelable(Alarm.ALARM_FLAG);
 
-        TextView tv = (TextView)findViewById(R.id.alarm_ringing);
-        tv.setText("Alarm is ringing!\n"
-                        + alarm.getName()
-                        + "\n" + alarm.toString()
-                        + "\nringtone id: " + alarm.getRingtoneUri()
-                        + "\nsnooze delay: " + alarm.getSnoozeDelay()
-                        + "\nlength of ringing: " + alarm.getLengthOfRinging()
-                        + "\nmethod id: " + alarm.getMethodId()
-                        + "\ndifficulty: " + alarm.getDifficulty()
-                        + "\nvolume: " + alarm.getVolume()
-                        + "\nvibrate: " + alarm.isVibrate()
-        );
+        //item = alarm.getQRItem();
+        item = "ISIC";
 
+        //corr_qr_code = alarm.getCorrQRCode();
+        corr_qr_code = "FKMPHWF";
+
+        TextView tv = (TextView)findViewById(R.id.qr_item);
+        tv.setText(item);
 
         //spustime vyzvaneni a vibrace
         Intent ringtoneIntent = new Intent(getApplicationContext(),RingtonePlayerService.class);
@@ -50,6 +56,7 @@ public class AlarmResponse extends Activity {
         ringtoneIntent.putExtra(RingtonePlayerService.VOLUME, alarm.getVolume());
         ringtoneIntent.putExtra(RingtonePlayerService.VIBRATE, alarm.isVibrate());
         startService(ringtoneIntent);
+
 
         Runnable wakeLockReleaser = new Runnable() {
             @Override
@@ -133,14 +140,58 @@ public class AlarmResponse extends Activity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        //... a vratime se na hlavni obrazovku
-//        Intent intent = new Intent(this, AlarmMainActivity.class);
-//        startActivity(intent);
+
         // honza : ukoncime aktivitu
         stopService(new Intent(getApplicationContext(), AlarmService.class));
         finish();
     }
 
     public void snoozeAlarm(View view) {
+        //TODO
     }
+
+
+    //osetreni skenovani
+    public void scan(View view) {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setPrompt("Naskenujte kód z předmětu: " + item);
+        integrator.initiateScan();
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if (scanResult != null) {
+            String scanContent = scanResult.getContents();
+            String scanFormat = scanResult.getFormatName();
+            if(scanContent.equals(corr_qr_code)){
+                findViewById(R.id.buttons).setVisibility(View.VISIBLE);
+            }
+            else{
+                ((TextView)findViewById(R.id.qr_ringing)).setText("Špatný předmět! Zkuste to znova.");
+            }
+
+        }
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+
+    //tlacitka pro Dismiss/Snooze se objevi az po spravnem skenu; je treba zajistit, aby se hodnota parametru Visibility uchovala i např při rotaci obrazovky
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUTTONS_VISIBILITY, buttonsView.getVisibility());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null){
+            buttonsView.setVisibility(savedInstanceState.getInt(BUTTONS_VISIBILITY, View.VISIBLE));
+        }
+    }
+
 }
