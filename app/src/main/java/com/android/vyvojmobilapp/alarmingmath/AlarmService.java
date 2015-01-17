@@ -28,8 +28,7 @@ public class AlarmService extends Service {
         // spusti obrazovku ze zvoni budik
 
         // honza: spusti activity alarm response
-        ResponseIntentFactory factory = new ResponseIntentFactory();
-        Intent responseIntent = factory.createResponseIntent(getBaseContext(), intent);
+        Intent responseIntent =  new Intent(getBaseContext(), AlarmResponse.class);
         responseIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         responseIntent.putExtras(intent.getExtras());
 

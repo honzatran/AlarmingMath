@@ -13,8 +13,8 @@
     <string name="alarmNameHint">nazev budiku</string>
     <string name="delete_all">Clear alarms</string>
     <string name="snooze_alarm">Snooze</string>
-    <string name="qr_ringing">To stop or snooze the alarm, find and scan the barcode from the following item:</string>
     <string name="scan">Scan!</string>
     <string name="title_activity_alarm_response_qr">AlarmResponseQR</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

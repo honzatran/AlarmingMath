@@ -1,22 +1,27 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 
-public class AlarmResponse extends Activity {
+public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFragmentInteractionListener {
     private String TAG = AlarmResponse.class.getName();
     private PowerManager.WakeLock mWakeLock;
+    private Fragment fragment;
 
     private int WAKELOCK_TIMEOUT = 60 * 1000;
 
@@ -29,27 +34,38 @@ public class AlarmResponse extends Activity {
         Bundle bundles = intent.getExtras();
         Alarm alarm = bundles.getParcelable(Alarm.ALARM_FLAG);
 
-        TextView tv = (TextView)findViewById(R.id.alarm_ringing);
-        tv.setText("Alarm is ringing!\n"
-                        + alarm.getName()
-                        + "\n" + alarm.toString()
-                        + "\nringtone id: " + alarm.getRingtoneUri()
-                        + "\nsnooze delay: " + alarm.getSnoozeDelay()
-                        + "\nlength of ringing: " + alarm.getLengthOfRinging()
-                        + "\nmethod id: " + alarm.getMethodId()
-                        + "\ndifficulty: " + alarm.getDifficulty()
-                        + "\nvolume: " + alarm.getVolume()
-                        + "\nvibrate: " + alarm.isVibrate()
-        );
+        if(savedInstanceState == null){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
 
-        //spustime vyzvaneni a vibrace
-        Intent ringtoneIntent = new Intent(getApplicationContext(),RingtonePlayerService.class);
-        ringtoneIntent.putExtra(RingtonePlayerService.START_PLAY, true);
-        ringtoneIntent.putExtra(RingtonePlayerService.RINGTONE, alarm.getRingtoneUri());
-        ringtoneIntent.putExtra(RingtonePlayerService.VOLUME, alarm.getVolume());
-        ringtoneIntent.putExtra(RingtonePlayerService.VIBRATE, alarm.isVibrate());
-        startService(ringtoneIntent);
+            switch(alarm.getMethodId()){
+                case 2:
+                    //QR
+                    Log.i(TAG, "Starting QR response");
+                    fragment = QrResponseFragment.newInstance(alarm);
+                    break;
+                default:
+                    Log.i(TAG, "Starting simple response");
+                    fragment = SimpleResponseFragment.newInstance(alarm);
+
+            }
+            fragmentTransaction.add(R.id.response_layout, fragment);
+            fragmentTransaction.commit();
+
+            //spustime vyzvaneni a vibrace
+            Intent ringtoneIntent = new Intent(getApplicationContext(),RingtonePlayerService.class);
+            ringtoneIntent.putExtra(RingtonePlayerService.START_PLAY, true);
+            ringtoneIntent.putExtra(RingtonePlayerService.RINGTONE, alarm.getRingtoneUri());
+            ringtoneIntent.putExtra(RingtonePlayerService.VOLUME, alarm.getVolume());
+            ringtoneIntent.putExtra(RingtonePlayerService.VIBRATE, alarm.isVibrate());
+            startService(ringtoneIntent);
+        }
+
+
+
+
+
 
         Runnable wakeLockReleaser = new Runnable() {
             @Override
@@ -126,7 +142,7 @@ public class AlarmResponse extends Activity {
         //propoustime wakelock - dulezite, jinak by nam to mohlo silne drainovat baterii
         WakeLocker.release();
 
-        stopService(new Intent(getApplicationContext(),RingtonePlayerService.class));
+        stopService(new Intent(getApplicationContext(), RingtonePlayerService.class));
 
         //taky vycistime flags, ktere jsme nastavili v onResume
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -143,4 +159,10 @@ public class AlarmResponse extends Activity {
 
     public void snoozeAlarm(View view) {
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 }

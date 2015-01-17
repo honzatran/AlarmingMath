@@ -47,10 +47,6 @@
             android:name=".AlarmResponse"
             android:label="@string/title_activity_alarm_response" >
         </activity>
-        <activity
-            android:name=".AlarmResponseQR"
-            android:label="@string/title_activity_alarm_response_qr" >
-        </activity>
 
         <service
             android:name=".RingtonePlayerService"
