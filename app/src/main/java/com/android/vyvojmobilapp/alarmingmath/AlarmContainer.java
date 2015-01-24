@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
 /**
  * Created by honza on 1/10/15.
  * @author Tran Tuan Hiep
@@ -16,13 +15,18 @@ public class AlarmContainer extends ArrayList<Alarm> {
     public AlarmContainer(AlarmDatabase alarmDatabase) {
         this.alarmDatabase = alarmDatabase;
         List<Alarm> alarms = alarmDatabase.getAlarms();
-        if (alarms != null) {
-            addAll(alarms);
-        }
-    }
 
-    public Alarm getClosest(long currentTime) {
-        throw new UnsupportedOperationException();
+        if (alarms == null) {
+            return;
+        }
+
+        for (Alarm alarm : alarms) {
+            // pridavame jenom budiky, ktery nevznikly jako odlozeny
+            if (!alarm.isOneShot()) {
+                // honza: volame funkci predka abychom nedavali duplikatne furt do databaze
+                super.add(alarm);
+            }
+        }
     }
 
     @Override

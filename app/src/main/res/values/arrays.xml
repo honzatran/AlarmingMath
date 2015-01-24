@@ -8,6 +8,7 @@
         <item>20</item>
         <item>30</item>
     </string-array>
+
     <string-array name="lengthOfRingingSpinnerItems">
         <item>30 vteřin</item>
         <item>1 minuta</item>

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -55,6 +56,7 @@ public class AlarmManagerHelper extends BroadcastReceiver{
             return;
         }
 
+        ALARM_LOOP:
         for (Alarm alarm : alarms) {
             if (!alarm.isActive()) {
                 continue;
@@ -64,18 +66,53 @@ public class AlarmManagerHelper extends BroadcastReceiver{
             // honza: Zatim nastavujeme jen budiky na stejny den,
             // ktere budou pozdeji v ten den
             // TODO: pridat funkcnost pro budiky v ruznych dnech
-            if (alarm.getHour() >= cal.get(Calendar.HOUR_OF_DAY) &&
-                    alarm.getMinute() > cal.get(Calendar.MINUTE)) {
-                cal.set(Calendar.HOUR_OF_DAY, alarm.getHour());
-                cal.set(Calendar.MINUTE, alarm.getMinute());
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
+            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            boolean alarmStarted = false;
 
+            DayRecorder days = alarm.getDays();
+
+            final int curHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            final int curMin = Calendar.getInstance().get(Calendar.MINUTE);
+
+            cal.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+            cal.set(Calendar.MINUTE, alarm.getMinute());
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            if (alarm.getHour() >= curHour &&
+                    alarm.getMinute() > curMin &&
+                    days.isDaySet(currentDay - 1)) {
+
+                cal.set(Calendar.DAY_OF_WEEK, currentDay);
                 PendingIntent sender = createPendingIntent(context, alarm);
                 // naplanuje budik na spravnej cas
                 alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+                continue ALARM_LOOP;
             }
 
+
+            for (int i = currentDay + 1; i <= Calendar.SATURDAY; i++) {
+                if (days.isDaySet(i - 1)) {
+
+                    cal.set(Calendar.DAY_OF_WEEK, i);
+                    PendingIntent sender = createPendingIntent(context, alarm);
+                    // naplanuje budik na spravnej cas
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+
+                    continue ALARM_LOOP;
+                }
+            }
+
+            for (int i = Calendar.SUNDAY; i <= currentDay; ++i) {
+                if (days.isDaySet(i-1)) {
+                    cal.set(Calendar.DAY_OF_WEEK, i);
+                    cal.add(Calendar.WEEK_OF_YEAR, 1);
+                    PendingIntent sender = createPendingIntent(context, alarm);
+                    // naplanuje budik na spravnej cas
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+                    continue ALARM_LOOP;
+                }
+            }
         }
     }
 
@@ -102,8 +139,14 @@ public class AlarmManagerHelper extends BroadcastReceiver{
     }
 
     private static PendingIntent createPendingIntent(Context context, Alarm alarm) {
+        // honza: tady to blblo nejakej divnej bug s parceable
+        Parcel parcel = Parcel.obtain();
+        alarm.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
         Intent intent = new Intent(context, AlarmService.class);
-        intent.putExtra(Alarm.ALARM_FLAG, alarm);
+
+        intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
         // Honza: problematicky pretypovani long na int
         // dulezity je to id, tim je znacenej jeden pending intent a ten flag viz dokumentace
         return PendingIntent.getService(context, (int)alarm.getId(), intent,

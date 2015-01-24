@@ -18,4 +18,6 @@ public class AlarmDtbColumns implements BaseColumns{
     public static String column_active = "active";
     public static String column_vibrate = "vibrate";
     public static String column_name = "name";
+    public static String column_days_mask = "days_mask";
+    public static String column_one_shot = "one_shot";
 }

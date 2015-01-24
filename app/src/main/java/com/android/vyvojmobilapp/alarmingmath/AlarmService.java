@@ -32,8 +32,6 @@ public class AlarmService extends Service {
         responseIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         responseIntent.putExtras(intent.getExtras());
 
-        String gotIt = ((Alarm)intent.getParcelableExtra(Alarm.ALARM_FLAG)).toString();
-        Toast.makeText(getApplicationContext(), gotIt, Toast.LENGTH_LONG).show();
         getApplication().startActivity(responseIntent);
 
         // honza: nastavi vsechny dalsi budiky

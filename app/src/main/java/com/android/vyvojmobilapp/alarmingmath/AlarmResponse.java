@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Parcel;
 import android.os.PowerManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,12 +17,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 
 public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFragmentInteractionListener {
     private String TAG = AlarmResponse.class.getName();
     private PowerManager.WakeLock mWakeLock;
     private Fragment fragment;
+    private Alarm alarm;
 
     private int WAKELOCK_TIMEOUT = 60 * 1000;
 
@@ -31,25 +36,26 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         setContentView(R.layout.activity_alarm_response);
 
         Intent intent = getIntent();
-        Bundle bundles = intent.getExtras();
-        Alarm alarm = bundles.getParcelable(Alarm.ALARM_FLAG);
+
+        // honza: oprava bugu s parceable a pending intentem
+        // normalne nejakej bug co hazi vyjimku, kdyz zavolam intent.getExtra(Alarm.ALARM_FLAG);
+        byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(arr, 0, arr.length);
+        parcel.setDataPosition(0);
+
+        alarm = Alarm.CREATOR.createFromParcel(parcel);
+
+        Toast.makeText(this, alarm.toString(),Toast.LENGTH_LONG).show();
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+            // honza : tady vytvareni framentu pres factory, at je to hezci
+            FragmentResponseFactory factory = new FragmentResponseFactory();
+            fragment = factory.createResponseFragment(alarm);
 
-            switch(alarm.getMethodId()){
-                case 2:
-                    //QR
-                    Log.i(TAG, "Starting QR response");
-                    fragment = QrResponseFragment.newInstance(alarm);
-                    break;
-                default:
-                    Log.i(TAG, "Starting simple response");
-                    fragment = SimpleResponseFragment.newInstance(alarm);
-
-            }
             fragmentTransaction.add(R.id.response_layout, fragment);
             fragmentTransaction.commit();
 
@@ -63,21 +69,15 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         }
 
 
-
-
-
-
         Runnable wakeLockReleaser = new Runnable() {
             @Override
             public void run() {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-
                 if (mWakeLock != null && mWakeLock.isHeld()) {
+                    Log.v(TAG, "Wake lock released runnable");
                     mWakeLock.release();
                 }
+
+                snoozeAlarm(null);
             }
         };
 
@@ -96,7 +96,9 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
 
         PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
         if (mWakeLock == null) {
-            mWakeLock = pm.newWakeLock((PowerManager.FULL_WAKE_LOCK | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), TAG);
+            mWakeLock = pm.newWakeLock((PowerManager.FULL_WAKE_LOCK |
+                    PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP), TAG);
         }
 
         if (!mWakeLock.isHeld()) {
@@ -117,6 +119,7 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         super.onPause();
 
         if (mWakeLock != null && mWakeLock.isHeld()) {
+            Log.v(TAG, "Wakelock released pause");
             mWakeLock.release();
         }
     }
@@ -138,10 +141,17 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
 
     public void dismissAlarm(View view) {
         // honza : metoda ktera se vola po stisknuti tlacitka dismiss
+        returnToNormalState();
+        checkSnoozeAlarm();
+        //... a vratime se na hlavni obrazovku
+//        Intent intent = new Intent(this, AlarmMainActivity.class);
+//        startActivity(intent);
+        // honza : ukoncime aktivitu servicu
+        stopService(new Intent(getApplicationContext(), AlarmService.class));
+        finish();
+    }
 
-        //propoustime wakelock - dulezite, jinak by nam to mohlo silne drainovat baterii
-        WakeLocker.release();
-
+    private void returnToNormalState() {
         stopService(new Intent(getApplicationContext(), RingtonePlayerService.class));
 
         //taky vycistime flags, ktere jsme nastavili v onResume
@@ -149,15 +159,41 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        //... a vratime se na hlavni obrazovku
-//        Intent intent = new Intent(this, AlarmMainActivity.class);
-//        startActivity(intent);
-        // honza : ukoncime aktivitu
-        stopService(new Intent(getApplicationContext(), AlarmService.class));
-        finish();
     }
 
     public void snoozeAlarm(View view) {
+        try {
+            returnToNormalState();
+            Alarm snoozedAlarm = alarm.getSnoozeOneShot(Calendar.getInstance().
+                    get(Calendar.DAY_OF_WEEK) - 1);
+            Toast.makeText(this, snoozedAlarm.toString(),Toast.LENGTH_LONG).show();
+            checkSnoozeAlarm();
+
+            AlarmDatabase dtb = new AlarmDatabase(this);
+            dtb.addAlarm(snoozedAlarm);
+            AlarmManagerHelper.startAlarmPendingIntent(this);
+            stopService(new Intent(getApplicationContext(), AlarmService.class));
+            finish();
+        }
+        catch (CloneNotSupportedException exp) {
+            Log.v(TAG, "clone not supported exception");
+        }
+    }
+
+    private void checkSnoozeAlarm() {
+        if (alarm.isOneShot()) {
+            AlarmDatabase dtb = new AlarmDatabase(this);
+            AlarmManagerHelper.cancelAlarmPendingIntents(this);
+            dtb.deleteAlarm(alarm.getId());
+            AlarmManagerHelper.startAlarmPendingIntent(this);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // honza: na stisknuti z odkladame alarm
+        snoozeAlarm(null);
+        super.onBackPressed();
     }
 
     @Override

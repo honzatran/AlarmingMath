@@ -11,7 +11,7 @@ import java.util.Calendar;
  */
 
 //parcelable = lze připojit k intentu jako "extras"
-public class Alarm implements Parcelable {
+public class Alarm implements Parcelable, Cloneable {
     //definice konstant pro metody buzeni
     public static final int NO_TASK = 0;
     public static final int MATH = 1;
@@ -42,8 +42,34 @@ public class Alarm implements Parcelable {
     boolean vibrate;
     String name;
 
+    boolean oneShot;
 
-    public Alarm(int hour, int minute, String ringtoneUri, int snoozeDelay, int lengthOfRinging, int methodId, int difficulty, int volume, boolean active, boolean vibrate, String name) {
+    DayRecorder days;
+
+    final static int snoozeTime = 5;
+
+
+    /**
+     * constructor for creating alarm from AlarmActivity
+     * @param hour
+     * @param minute
+     * @param ringtoneUri
+     * @param snoozeDelay
+     * @param lengthOfRinging
+     * @param methodId
+     * @param difficulty
+     * @param volume
+     * @param active
+     * @param vibrate
+     * @param name
+     * @param days
+     */
+    public Alarm(
+            int hour, int minute, String ringtoneUri,
+            int snoozeDelay, int lengthOfRinging, int methodId,
+            int difficulty, int volume, boolean active,
+            boolean vibrate, String name, DayRecorder days) {
+
         this.hour = hour;
         this.minute = minute;
         this.ringtoneUri = ringtoneUri;
@@ -55,8 +81,35 @@ public class Alarm implements Parcelable {
         this.active = active;
         this.vibrate = vibrate;
         this.name = name;
+        this.days = days;
+        this.oneShot = false;
     }
-    public Alarm(int hour, int minute, long id, String ringtoneUri, int snoozeDelay, int lengthOfRinging, int methodId, int difficulty, int volume, boolean active, boolean vibrate, String name) {
+
+
+    /**
+     * constructor for creating alarm from database
+     * @param hour
+     * @param minute
+     * @param id
+     * @param ringtoneUri
+     * @param snoozeDelay
+     * @param lengthOfRinging
+     * @param methodId
+     * @param difficulty
+     * @param volume
+     * @param active
+     * @param vibrate
+     * @param name
+     * @param days
+     * @param oneShot
+     */
+    public Alarm(
+            int hour, int minute, long id,
+            String ringtoneUri, int snoozeDelay, int lengthOfRinging,
+            int methodId, int difficulty, int volume,
+            boolean active, boolean vibrate, String name,
+            DayRecorder days, boolean oneShot) {
+
         this.hour = hour;
         this.minute = minute;
         this.id = id;
@@ -69,17 +122,8 @@ public class Alarm implements Parcelable {
         this.active = active;
         this.vibrate = vibrate;
         this.name = name;
-    }
-
-    public Alarm(int hour, int minute) {
-        this.hour = hour;
-        this.minute = minute;
-    }
-
-    public Alarm(int hour, int minute, long id) {
-        this.hour = hour;
-        this.minute = minute;
-        this.id = id;
+        this.days = days;
+        this.oneShot = oneShot;
     }
 
     public int getHour() {
@@ -111,6 +155,11 @@ public class Alarm implements Parcelable {
         return active;
     }
     public boolean isVibrate() { return vibrate; }
+
+    public DayRecorder getDays() {
+        return days;
+    }
+
     public String getName() {
         return name;
     }
@@ -123,8 +172,38 @@ public class Alarm implements Parcelable {
     }
 
 
+    @Override
+    public Alarm clone() throws CloneNotSupportedException {
+        return (Alarm) super.clone();
+    }
+
+    public Alarm getSnoozeOneShot(int currDay) throws CloneNotSupportedException {
+        // honza: naclonujeme si budik at nemusime kopirovat vsechno rucne
+        Alarm snoozeAlarm = this.clone();
+        snoozeAlarm.minute += snoozeTime;
+        snoozeAlarm.days = new DayRecorder();
+        snoozeAlarm.days.setDay(true, currDay);
+
+        if (snoozeAlarm.minute > 60) {
+            snoozeAlarm.hour += 1;
+            snoozeAlarm.minute %= 60;
+
+            if (snoozeAlarm.hour > 23) {
+                snoozeAlarm.hour %= 24;
+                snoozeAlarm.days.setDay(false, currDay);
+                snoozeAlarm.days.setDay(true, (currDay + 1) % 7);
+            }
+        }
+
+        snoozeAlarm.id = 0;
+        snoozeAlarm.oneShot = true;
+
+        return snoozeAlarm;
+    }
+
 
     //nasleduji metody impementující rozhraní Parcelable - vygenerovano pomoci http://www.parcelabler.com
+    // honza: tady jsem to nechal vygenerovat znovu kvuli dalsi polozce
     protected Alarm(Parcel in) {
         hour = in.readInt();
         minute = in.readInt();
@@ -132,12 +211,14 @@ public class Alarm implements Parcelable {
         snoozeDelay = in.readInt();
         lengthOfRinging = in.readInt();
         methodId = in.readInt();
-        difficulty= in.readInt();
         volume = in.readInt();
+        difficulty = in.readInt();
         id = in.readLong();
         active = in.readByte() != 0x00;
         vibrate = in.readByte() != 0x00;
         name = in.readString();
+        days = (DayRecorder) in.readValue(DayRecorder.class.getClassLoader());
+        oneShot = in.readByte() != 0x00;
     }
 
     @Override
@@ -153,12 +234,14 @@ public class Alarm implements Parcelable {
         dest.writeInt(snoozeDelay);
         dest.writeInt(lengthOfRinging);
         dest.writeInt(methodId);
-        dest.writeInt(difficulty);
         dest.writeInt(volume);
+        dest.writeInt(difficulty);
         dest.writeLong(id);
         dest.writeByte((byte) (active ? 0x01 : 0x00));
         dest.writeByte((byte) (vibrate ? 0x01 : 0x00));
         dest.writeString(name);
+        dest.writeValue(days);
+        dest.writeByte((byte) (oneShot ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")
@@ -174,4 +257,7 @@ public class Alarm implements Parcelable {
         }
     };
 
+    public boolean isOneShot() {
+        return oneShot;
+    }
 }

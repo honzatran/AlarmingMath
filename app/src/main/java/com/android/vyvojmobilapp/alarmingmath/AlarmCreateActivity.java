@@ -1,6 +1,7 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.Calendar;
 
@@ -34,7 +36,11 @@ public class AlarmCreateActivity extends ActionBarActivity {
     SeekBar volumeSeekbar;
     Uri uri = null;
 
-    private static String TAG = "Alarm";
+
+
+    TgnDayButtonClickListener daysListener;
+
+    private static String TAG = AlarmCreateActivity.class.getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,20 @@ public class AlarmCreateActivity extends ActionBarActivity {
                 }
         );
         volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
+        
+        setUpDaysButtons();
+    }
+
+    private void setUpDaysButtons() {
+        Resources res = getResources();
+        int[] tgnDaysIds = DayRecorder.tgnButtleIds;
+
+        daysListener = new TgnDayButtonClickListener();
+
+        for (int tgnDayId : tgnDaysIds) {
+            ToggleButton tgnButton = (ToggleButton) findViewById(tgnDayId);
+            tgnButton.setOnClickListener(daysListener);
+        }
     }
 
     @Override
@@ -118,7 +138,14 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
         String ringtoneUri = uri.toString();
 
-        Alarm alarm = new Alarm(hour, minute, ringtoneUri, snoozeDelay, lengthOfRinging, method, difficulty, volume, active, vibrate, name);
+        DayRecorder dayRecorder = daysListener.getRecorder();
+        Log.v(TAG, "mask of days" + dayRecorder.getMask());
+
+        Alarm alarm = new Alarm(
+                hour, minute, ringtoneUri,
+                snoozeDelay, lengthOfRinging, method,
+                difficulty, volume, active,
+                vibrate, name, dayRecorder);
 
         Intent intent = new Intent(this, AlarmMainActivity.class);
         intent.putExtra(Alarm.ALARM_FLAG, alarm);

@@ -92,17 +92,83 @@
             android:progress="75"
             android:max="100"
             />
+
+
+        <LinearLayout
+            android:id="@+id/days_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:weightSum="7"
+            android:layout_below="@id/volumeSeekBar"
+            >
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/monday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/monday"
+                android:textOff="@string/monday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/tuesday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/tuesday"
+                android:textOff="@string/tuesday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/wednesday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/wednesday"
+                android:textOff="@string/wednesday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/thursday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/thursday"
+                android:textOff="@string/thursday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/friday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/friday"
+                android:textOff="@string/friday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/saturday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/saturday"
+                android:textOff="@string/saturday"/>
+
+            <ToggleButton
+                android:layout_weight="1"
+                android:id="@+id/sunday_toggle_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn="@string/sunday"
+                android:textOff="@string/sunday"/>
+
+
+            </LinearLayout>
+
         <Button
             android:id="@+id/volumeBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_alarm"
             android:onClick="createAlarm"
-            android:layout_below="@+id/volumeSeekBar"
-
+            android:layout_below="@id/days_picker"
             />
-
-
 
     </RelativeLayout>
 </ScrollView>

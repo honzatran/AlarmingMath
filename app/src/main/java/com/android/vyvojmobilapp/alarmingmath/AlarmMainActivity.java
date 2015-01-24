@@ -92,8 +92,10 @@ public class AlarmMainActivity extends ActionBarActivity {
                                 "\nMethod: "+alarm.getMethodId()+
                                 "\nVolume: "+alarm.getVolume()+
                                 "\nActive: "+alarm.isActive()+
-                                "\nVibrate: "+alarm.isVibrate()
-                                , Toast.LENGTH_LONG).show();
+                                "\nVibrate: "+alarm.isVibrate() +
+                                "\nDays mask:" + alarm.getDays().getMask() +
+                                "\nOne shot:" + alarm.isOneShot() ,
+                        Toast.LENGTH_LONG).show();
                 break;
             case 2: //delete
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
