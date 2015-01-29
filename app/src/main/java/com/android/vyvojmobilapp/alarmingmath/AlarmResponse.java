@@ -27,6 +27,8 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
     private PowerManager.WakeLock mWakeLock;
     private Fragment fragment;
     private Alarm alarm;
+    private Runnable wakeLockReleaser;
+    private Handler handler;
 
     private int WAKELOCK_TIMEOUT = 60 * 1000;
 
@@ -69,19 +71,20 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         }
 
 
-        Runnable wakeLockReleaser = new Runnable() {
+        wakeLockReleaser = new Runnable() {
             @Override
             public void run() {
                 if (mWakeLock != null && mWakeLock.isHeld()) {
-                    Log.v(TAG, "Wake lock released runnable");
                     mWakeLock.release();
+                    Log.v(TAG, "Wake lock released runnable");
+                    snoozeAlarm(null);
                 }
 
-                snoozeAlarm(null);
             }
         };
 
-        new Handler().postDelayed(wakeLockReleaser, WAKELOCK_TIMEOUT);
+        handler = new Handler();
+        handler.postDelayed(wakeLockReleaser, WAKELOCK_TIMEOUT);
     }
 
     @Override
@@ -159,6 +162,8 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+        handler.removeCallbacks(wakeLockReleaser);
     }
 
     public void snoozeAlarm(View view) {
@@ -166,7 +171,6 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
             returnToNormalState();
             Alarm snoozedAlarm = alarm.getSnoozeOneShot(Calendar.getInstance().
                     get(Calendar.DAY_OF_WEEK) - 1);
-            Toast.makeText(this, snoozedAlarm.toString(),Toast.LENGTH_LONG).show();
             checkSnoozeAlarm();
 
             AlarmDatabase dtb = new AlarmDatabase(this);
