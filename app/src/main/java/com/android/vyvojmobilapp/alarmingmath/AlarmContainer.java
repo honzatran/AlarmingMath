@@ -1,7 +1,6 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,7 +21,7 @@ public class AlarmContainer extends ArrayList<Alarm> {
 
         for (Alarm alarm : alarms) {
             // pridavame jenom budiky, ktery nevznikly jako odlozeny
-            if (!alarm.isOneShot()) {
+            if (!alarm.isSnoozingAlarm()) {
                 // honza: volame funkci predka abychom nedavali duplikatne furt do databaze
                 super.add(alarm);
             }

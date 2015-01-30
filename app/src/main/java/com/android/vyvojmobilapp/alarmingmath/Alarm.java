@@ -42,7 +42,13 @@ public class Alarm implements Parcelable, Cloneable {
     boolean vibrate;
     String name;
 
+    // replacing one shot
     boolean oneShot;
+
+    // rika jestli je budik repeating, tj. furt se opakuje
+    // nebo jestli je oneShot zazvoni jednou a pak se deaktivuje
+    // nebo jestli je snooze zazvoni jednou a smaze se z databaze
+    AlarmType alarmType;
 
     DayRecorder days;
 
@@ -68,7 +74,7 @@ public class Alarm implements Parcelable, Cloneable {
             int hour, int minute, String ringtoneUri,
             int snoozeDelay, int lengthOfRinging, int methodId,
             int difficulty, int volume, boolean active,
-            boolean vibrate, String name, DayRecorder days) {
+            boolean vibrate, String name, DayRecorder days, AlarmType alarmType) {
 
         this.hour = hour;
         this.minute = minute;
@@ -82,7 +88,7 @@ public class Alarm implements Parcelable, Cloneable {
         this.vibrate = vibrate;
         this.name = name;
         this.days = days;
-        this.oneShot = false;
+        this.alarmType = alarmType;
     }
 
 
@@ -101,14 +107,13 @@ public class Alarm implements Parcelable, Cloneable {
      * @param vibrate
      * @param name
      * @param days
-     * @param oneShot
      */
     public Alarm(
             int hour, int minute, long id,
             String ringtoneUri, int snoozeDelay, int lengthOfRinging,
             int methodId, int difficulty, int volume,
             boolean active, boolean vibrate, String name,
-            DayRecorder days, boolean oneShot) {
+            DayRecorder days, AlarmType alarmType) {
 
         this.hour = hour;
         this.minute = minute;
@@ -123,7 +128,7 @@ public class Alarm implements Parcelable, Cloneable {
         this.vibrate = vibrate;
         this.name = name;
         this.days = days;
-        this.oneShot = oneShot;
+        this.alarmType = alarmType;
     }
 
     public int getHour() {
@@ -164,6 +169,10 @@ public class Alarm implements Parcelable, Cloneable {
         return name;
     }
 
+    public AlarmType getAlarmType() {
+        return alarmType;
+    }
+
     @Override
     public String toString() {
         //korektni zobrazeni napr. 15:07 misto 15:7
@@ -177,7 +186,7 @@ public class Alarm implements Parcelable, Cloneable {
         return (Alarm) super.clone();
     }
 
-    public Alarm getSnoozeOneShot(int currDay) throws CloneNotSupportedException {
+    public Alarm getSnoozingVersion(int currDay) throws CloneNotSupportedException {
         // honza: naclonujeme si budik at nemusime kopirovat vsechno rucne
         Alarm snoozeAlarm = this.clone();
         snoozeAlarm.minute += snoozeTime;
@@ -196,7 +205,7 @@ public class Alarm implements Parcelable, Cloneable {
         }
 
         snoozeAlarm.id = 0;
-        snoozeAlarm.oneShot = true;
+        snoozeAlarm.alarmType = AlarmType.SNOOZE;
 
         return snoozeAlarm;
     }
@@ -218,7 +227,7 @@ public class Alarm implements Parcelable, Cloneable {
         vibrate = in.readByte() != 0x00;
         name = in.readString();
         days = (DayRecorder) in.readValue(DayRecorder.class.getClassLoader());
-        oneShot = in.readByte() != 0x00;
+        alarmType = AlarmType.getEnum(in.readInt());
     }
 
     @Override
@@ -241,7 +250,7 @@ public class Alarm implements Parcelable, Cloneable {
         dest.writeByte((byte) (vibrate ? 0x01 : 0x00));
         dest.writeString(name);
         dest.writeValue(days);
-        dest.writeByte((byte) (oneShot ? 0x01 : 0x00));
+        dest.writeInt(alarmType.convert());
     }
 
     @SuppressWarnings("unused")
@@ -257,7 +266,7 @@ public class Alarm implements Parcelable, Cloneable {
         }
     };
 
-    public boolean isOneShot() {
-        return oneShot;
+    public boolean isSnoozingAlarm() {
+        return alarmType == AlarmType.SNOOZE;
     }
 }

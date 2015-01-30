@@ -1,10 +1,6 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 // dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
 
@@ -94,7 +87,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                                 "\nActive: "+alarm.isActive()+
                                 "\nVibrate: "+alarm.isVibrate() +
                                 "\nDays mask:" + alarm.getDays().getMask() +
-                                "\nOne shot:" + alarm.isOneShot() ,
+                                "\nOne shot:" + alarm.isSnoozingAlarm() ,
                         Toast.LENGTH_LONG).show();
                 break;
             case 2: //delete

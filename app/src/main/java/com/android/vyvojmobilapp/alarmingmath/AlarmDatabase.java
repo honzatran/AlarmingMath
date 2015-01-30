@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public static final int version = 1;
     public static final String dbName = "alarmDatabase.db";
+
+    private static String TAG = AlarmDatabase.class.getName();
 
     private static final String CREATE_ALARM_TABLE =
             "CREATE TABLE " + AlarmDtbColumns.name + " (" +
@@ -32,7 +35,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                     AlarmDtbColumns.column_vibrate + " BOOLEAN, " +
                     AlarmDtbColumns.column_name + " TEXT, " +
                     AlarmDtbColumns.column_days_mask + " INTEGER, " +
-                    AlarmDtbColumns.column_one_shot + " BOOLEAN)";
+                    AlarmDtbColumns.column_alarm_type + " INTEGER)";
 
     public static final String DELETE_ALARM_TABLE =
             "DROP TABLE IF EXISTS " + AlarmDtbColumns.name;
@@ -66,7 +69,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         values.put(AlarmDtbColumns.column_vibrate, alarm.isVibrate());
         values.put(AlarmDtbColumns.column_name, alarm.getName());
         values.put(AlarmDtbColumns.column_days_mask, alarm.getDays().getMask());
-        values.put(AlarmDtbColumns.column_one_shot, alarm.isOneShot());
+        values.put(AlarmDtbColumns.column_alarm_type, alarm.getAlarmType().convert());
 
         return values;
     }
@@ -87,6 +90,17 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 }
         );
     }
+
+    public void setAlarmActive(boolean active, long id) {
+        SQLiteDatabase dtb = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(AlarmDtbColumns.column_active, active);
+
+        int i = dtb.update(AlarmDtbColumns.name, values, AlarmDtbColumns._ID + "=" + id, null);
+        Log.v(TAG, "updates count = " + i);
+    }
+
 
     public void deleteAll() {
         getWritableDatabase().execSQL(
@@ -109,7 +123,6 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
         return null;
     }
-
 
     public List<Alarm> getAlarms() {
         SQLiteDatabase dtb = this.getReadableDatabase();
@@ -146,13 +159,15 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         boolean vibrate = (c.getInt(c.getColumnIndex(AlarmDtbColumns.column_vibrate)) != 0);
         String name = c.getString(c.getColumnIndex(AlarmDtbColumns.column_name));
         byte b = (byte) c.getInt(c.getColumnIndex(AlarmDtbColumns.column_days_mask));
-        boolean oneShot = (c.getInt(c.getColumnIndex(AlarmDtbColumns.column_one_shot)) != 0);
+
+        int alarmTypeId = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_alarm_type));
+        AlarmType alarmType = AlarmType.getEnum(alarmTypeId);
 
         long id = c.getLong(c.getColumnIndex(AlarmDtbColumns._ID));
         return new Alarm(hour, minutes, id,
                 ringtoneUri, snoozeDelay,
                 lengthOfRinging, methodId,
                 difficulty, volume, active,
-                vibrate, name, new DayRecorder(b), oneShot);
+                vibrate, name, new DayRecorder(b), alarmType);
     }
 }

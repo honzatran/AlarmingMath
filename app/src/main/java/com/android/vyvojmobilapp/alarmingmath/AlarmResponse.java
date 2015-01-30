@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.PowerManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -145,7 +144,7 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
     public void dismissAlarm(View view) {
         // honza : metoda ktera se vola po stisknuti tlacitka dismiss
         returnToNormalState();
-        checkSnoozeAlarm();
+        checkAlarmType();
         //... a vratime se na hlavni obrazovku
 //        Intent intent = new Intent(this, AlarmMainActivity.class);
 //        startActivity(intent);
@@ -169,9 +168,9 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
     public void snoozeAlarm(View view) {
         try {
             returnToNormalState();
-            Alarm snoozedAlarm = alarm.getSnoozeOneShot(Calendar.getInstance().
+            Alarm snoozedAlarm = alarm.getSnoozingVersion(Calendar.getInstance().
                     get(Calendar.DAY_OF_WEEK) - 1);
-            checkSnoozeAlarm();
+            checkAlarmType();
 
             AlarmDatabase dtb = new AlarmDatabase(this);
             dtb.addAlarm(snoozedAlarm);
@@ -184,13 +183,34 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         }
     }
 
-    private void checkSnoozeAlarm() {
-        if (alarm.isOneShot()) {
-            AlarmDatabase dtb = new AlarmDatabase(this);
-            AlarmManagerHelper.cancelAlarmPendingIntents(this);
-            dtb.deleteAlarm(alarm.getId());
-            AlarmManagerHelper.startAlarmPendingIntent(this);
+    private void checkAlarmType() {
+        AlarmType alarmType = alarm.getAlarmType();
+
+        switch (alarmType) {
+            case SNOOZE:
+                reactToSnoozingAlarm();
+                break;
+            case ONESHOT:
+                reactToOneShotAlarm();
+                break;
+            case REPEATING:
+                break;
         }
+    }
+
+    private void reactToOneShotAlarm() {
+        AlarmDatabase dtb = new AlarmDatabase(this);
+        AlarmManagerHelper.cancelAlarmPendingIntents(this);
+        // deaktivujeme alarm
+        dtb.setAlarmActive(false, alarm.getId());
+        AlarmManagerHelper.startAlarmPendingIntent(this);
+    }
+
+    private void reactToSnoozingAlarm() {
+        AlarmDatabase dtb = new AlarmDatabase(this);
+        AlarmManagerHelper.cancelAlarmPendingIntents(this);
+        dtb.deleteAlarm(alarm.getId());
+        AlarmManagerHelper.startAlarmPendingIntent(this);
     }
 
     @Override

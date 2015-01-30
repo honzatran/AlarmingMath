@@ -140,12 +140,37 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
         DayRecorder dayRecorder = daysListener.getRecorder();
         Log.v(TAG, "mask of days" + dayRecorder.getMask());
+        byte mask = dayRecorder.getMask();
+
+
+
+        AlarmType alarmType;
+        // budik nebyl naplanovanej na zadnej den
+        if (mask == 0) {
+            Calendar calendar = Calendar.getInstance();
+            int currentDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+            if (hour <= calendar.get(Calendar.HOUR) &&
+                    minute < calendar.get(Calendar.MINUTE)) {
+                // naplanuj na dalsi den
+                dayRecorder.setDay(true, (currentDay + 1) % 7);
+            } else {
+                // naplanuj budik na dnesek
+                dayRecorder.setDay(true, currentDay);
+            }
+
+            alarmType = AlarmType.ONESHOT;
+        } else  {
+            alarmType = AlarmType.REPEATING;
+        }
+
+
 
         Alarm alarm = new Alarm(
                 hour, minute, ringtoneUri,
                 snoozeDelay, lengthOfRinging, method,
                 difficulty, volume, active,
-                vibrate, name, dayRecorder);
+                vibrate, name, dayRecorder, alarmType);
 
         Intent intent = new Intent(this, AlarmMainActivity.class);
         intent.putExtra(Alarm.ALARM_FLAG, alarm);
