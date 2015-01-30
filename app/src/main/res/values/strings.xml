@@ -23,5 +23,10 @@
     <string name="thursday">Th</string>
     <string name="wednesday">We</string>
     <string name="tuesday">Tu</string>
+    <string name="qrNewScanText">Nový scan</string>
+    <string name="ringtonePickerText">Vyberte vyzvánění...</string>
+    <string name="dialog_setQrHint">Zadejte popis identifikující naskenovaný kód (zobrazí se při buzení) (např. \"zubní pasta\")</string>
+    <string name="dialog_confirm">Uložit</string>
+    <string name="qrClearScansText">Clear all</string>
 
 </resources>
