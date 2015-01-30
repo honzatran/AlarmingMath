@@ -75,11 +75,49 @@
             android:id="@+id/difficulty_spinner"
             android:entries="@array/difficultySpinnerItems"
             android:spinnerMode="dropdown" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/difficulty_spinner"
+            android:weightSum="3"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:id="@+id/qr_buttons">
+
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/qr_spinner"
+                android:spinnerMode="dropdown" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/qrNewScanText"
+                android:onClick="onQrNewScan"
+                android:id="@+id/qrNewScan"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/qrClearScansText"
+                android:onClick="onQrClearAll"
+                android:id="@+id/qrClearAll"
+                />
+
+
+        </LinearLayout>
+
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/difficulty_spinner"
-            android:text="Vyberte vyzvánění..."
+            android:layout_below="@+id/qr_buttons"
+            android:text="@string/ringtonePickerText"
             android:onClick="onRingtonePickerClick"
             android:id="@+id/ringtonePicker"
             />
