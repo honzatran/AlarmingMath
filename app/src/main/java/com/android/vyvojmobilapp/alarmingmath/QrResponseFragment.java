@@ -77,10 +77,11 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
         setRetainInstance(true);
         if (getArguments() != null) {
             alarm = getArguments().getParcelable(ARG_ALARM);
-            //item = alarm.getQRItem();
-            item = "ISIC";
-            //corr_qr_code = alarm.getCorrQRCode();
-            corr_qr_code = "FKMPHWF";
+            item = alarm.getQr().getHint();
+            //item = "ISIC";
+            corr_qr_code = alarm.getQr().getCode();
+            Log.i("qr","kod: " + corr_qr_code);
+            //corr_qr_code = "FKMPHWF";
         }
     }
 
@@ -141,6 +142,7 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
 
         if ((resultCode == Activity.RESULT_OK) && (scanResult != null)) {
             String scanContent = scanResult.getContents();
+            Log.i("qr","vysledek skenu: " + scanContent);
             String scanFormat = scanResult.getFormatName();
             if(scanContent.equals(corr_qr_code)){
                 Log.i("qr", "correct item");

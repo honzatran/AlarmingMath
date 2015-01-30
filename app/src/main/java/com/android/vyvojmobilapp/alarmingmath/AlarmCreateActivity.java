@@ -211,7 +211,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
                 hour, minute, ringtoneUri,
                 snoozeDelay, lengthOfRinging, method,
                 difficulty, volume, active,
-                vibrate, name, dayRecorder, alarmType);
+                vibrate, name, dayRecorder, alarmType, qr);
 
         Intent intent = new Intent(this, AlarmMainActivity.class);
         intent.putExtra(Alarm.ALARM_FLAG, alarm);

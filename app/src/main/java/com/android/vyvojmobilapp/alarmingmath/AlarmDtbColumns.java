@@ -20,4 +20,6 @@ public class AlarmDtbColumns implements BaseColumns{
     public static String column_name = "name";
     public static String column_days_mask = "days_mask";
     public static String column_alarm_type = "alarm_type";
+    public static String column_qr_hint = "qr_hint";
+    public static String column_qr_code = "qr_code";
 }

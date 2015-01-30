@@ -35,7 +35,9 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                     AlarmDtbColumns.column_vibrate + " BOOLEAN, " +
                     AlarmDtbColumns.column_name + " TEXT, " +
                     AlarmDtbColumns.column_days_mask + " INTEGER, " +
-                    AlarmDtbColumns.column_alarm_type + " INTEGER)";
+                    AlarmDtbColumns.column_alarm_type + " INTEGER, " +
+                    AlarmDtbColumns.column_qr_hint + " TEXT, " +
+                    AlarmDtbColumns.column_qr_code + " TEXT)";
 
     public static final String DELETE_ALARM_TABLE =
             "DROP TABLE IF EXISTS " + AlarmDtbColumns.name;
@@ -70,6 +72,8 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         values.put(AlarmDtbColumns.column_name, alarm.getName());
         values.put(AlarmDtbColumns.column_days_mask, alarm.getDays().getMask());
         values.put(AlarmDtbColumns.column_alarm_type, alarm.getAlarmType().convert());
+        values.put(AlarmDtbColumns.column_qr_hint, alarm.getQr().getHint());
+        values.put(AlarmDtbColumns.column_qr_code, alarm.getQr().getCode());
 
         return values;
     }
@@ -162,12 +166,14 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
         int alarmTypeId = c.getInt(c.getColumnIndex(AlarmDtbColumns.column_alarm_type));
         AlarmType alarmType = AlarmType.getEnum(alarmTypeId);
+        String qr_hint = c.getString(c.getColumnIndex(AlarmDtbColumns.column_qr_hint));
+        String qr_code = c.getString(c.getColumnIndex(AlarmDtbColumns.column_qr_code));
 
         long id = c.getLong(c.getColumnIndex(AlarmDtbColumns._ID));
         return new Alarm(hour, minutes, id,
                 ringtoneUri, snoozeDelay,
                 lengthOfRinging, methodId,
                 difficulty, volume, active,
-                vibrate, name, new DayRecorder(b), alarmType);
+                vibrate, name, new DayRecorder(b), alarmType, new QR(qr_hint,qr_code));
     }
 }

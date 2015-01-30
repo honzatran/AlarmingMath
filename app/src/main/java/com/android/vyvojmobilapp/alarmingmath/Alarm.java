@@ -41,6 +41,7 @@ public class Alarm implements Parcelable, Cloneable {
     boolean active;
     boolean vibrate;
     String name;
+    QR qr;
 
     // replacing one shot
     boolean oneShot;
@@ -74,7 +75,7 @@ public class Alarm implements Parcelable, Cloneable {
             int hour, int minute, String ringtoneUri,
             int snoozeDelay, int lengthOfRinging, int methodId,
             int difficulty, int volume, boolean active,
-            boolean vibrate, String name, DayRecorder days, AlarmType alarmType) {
+            boolean vibrate, String name, DayRecorder days, AlarmType alarmType, QR qr) {
 
         this.hour = hour;
         this.minute = minute;
@@ -89,6 +90,7 @@ public class Alarm implements Parcelable, Cloneable {
         this.name = name;
         this.days = days;
         this.alarmType = alarmType;
+        this.qr = qr;
     }
 
 
@@ -113,7 +115,7 @@ public class Alarm implements Parcelable, Cloneable {
             String ringtoneUri, int snoozeDelay, int lengthOfRinging,
             int methodId, int difficulty, int volume,
             boolean active, boolean vibrate, String name,
-            DayRecorder days, AlarmType alarmType) {
+            DayRecorder days, AlarmType alarmType, QR qr) {
 
         this.hour = hour;
         this.minute = minute;
@@ -129,6 +131,7 @@ public class Alarm implements Parcelable, Cloneable {
         this.name = name;
         this.days = days;
         this.alarmType = alarmType;
+        this.qr = qr;
     }
 
     public int getHour() {
@@ -171,6 +174,9 @@ public class Alarm implements Parcelable, Cloneable {
 
     public AlarmType getAlarmType() {
         return alarmType;
+    }
+    public QR getQr(){
+        return qr;
     }
 
     @Override
@@ -228,6 +234,7 @@ public class Alarm implements Parcelable, Cloneable {
         name = in.readString();
         days = (DayRecorder) in.readValue(DayRecorder.class.getClassLoader());
         alarmType = AlarmType.getEnum(in.readInt());
+        qr = new QR(in.readString(), in.readString());
     }
 
     @Override
@@ -251,6 +258,8 @@ public class Alarm implements Parcelable, Cloneable {
         dest.writeString(name);
         dest.writeValue(days);
         dest.writeInt(alarmType.convert());
+        dest.writeString(qr.getHint());
+        dest.writeString(qr.getCode());
     }
 
     @SuppressWarnings("unused")
