@@ -265,6 +265,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
                                     qrSpinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, qrDatabase.getQRs());
                                     qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                                     qrSpinner.setAdapter(qrSpinnerAdapter);
+                                    qrSpinner.setSelection(qrSpinner.getCount()-1);
                                 }
                             });
 

@@ -53,9 +53,6 @@ public class Alarm implements Parcelable, Cloneable {
 
     DayRecorder days;
 
-    final static int snoozeTime = 5;
-
-
     /**
      * constructor for creating alarm from AlarmActivity
      * @param hour
@@ -195,7 +192,7 @@ public class Alarm implements Parcelable, Cloneable {
     public Alarm getSnoozingVersion(int currDay) throws CloneNotSupportedException {
         // honza: naclonujeme si budik at nemusime kopirovat vsechno rucne
         Alarm snoozeAlarm = this.clone();
-        snoozeAlarm.minute += snoozeTime;
+        snoozeAlarm.minute += snoozeAlarm.snoozeDelay;
         snoozeAlarm.days = new DayRecorder();
         snoozeAlarm.days.setDay(true, currDay);
 

@@ -1,15 +1,44 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.android.vyvojmobilapp.alarmingmath.SimpleResponseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
         android:padding="30dp"
         android:text="@string/hello_blank_fragment"
         android:id="@+id/fragment_text"
         />
+    <Button
+        android:id="@+id/dismiss_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dismiss_alarm"
+        android:onClick="snoozeAlarm"
+        />
+</FrameLayout>-->
 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.android.vyvojmobilapp.alarmingmath.SimpleResponseFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
 
-
-</FrameLayout>
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="30dp"
+        android:text="@string/hello_blank_fragment"
+        android:id="@+id/fragment_text"
+        />
+    <Button
+        android:id="@+id/dismiss_alarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dismiss_alarm"
+        android:onClick="dismissAlarm" />
+</LinearLayout>

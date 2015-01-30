@@ -143,10 +143,10 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
         if ((resultCode == Activity.RESULT_OK) && (scanResult != null)) {
             String scanContent = scanResult.getContents();
             Log.i("qr","vysledek skenu: " + scanContent);
-            String scanFormat = scanResult.getFormatName();
+
             if(scanContent.equals(corr_qr_code)){
                 Log.i("qr", "correct item");
-                //findViewById(R.id.buttons).setVisibility(View.VISIBLE);
+                ((AlarmResponse)getActivity()).dismissAlarm(getView());
             }
             else{
                 Log.i("qr", "wrong item");
