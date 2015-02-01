@@ -169,8 +169,16 @@ public class AlarmCreateActivity extends ActionBarActivity {
         int difficulty = difficultySpinner.getSelectedItemPosition();
         int volume = volumeSeekbar.getProgress();
 
-        //TODO napojit na Alarm
-        QR qr = qrSpinnerAdapter.getItem(qrSpinner.getSelectedItemPosition());
+        QR qr = new QR("","");
+        if (method == Alarm.QR_CODE){
+            if (qrSpinner.getSelectedItemPosition() == Spinner.INVALID_POSITION){
+                Toast.makeText(this, "No QR code selected!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            qr = qrSpinnerAdapter.getItem(qrSpinner.getSelectedItemPosition());
+        }
+
+
 
 
         if (uri == null) {
@@ -235,7 +243,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         Log.i("qr", "called onactivityresult");
 
         //vysledek qr scanu
-        if (scanResult != null) {
+        if ((scanResult != null) && (scanResult.getContents() != null)) {
             final String scanContent = scanResult.getContents();
             String scanFormat = scanResult.getFormatName();
 
