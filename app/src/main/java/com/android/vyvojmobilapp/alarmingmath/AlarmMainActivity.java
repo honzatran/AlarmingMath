@@ -95,7 +95,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                 alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important
                 Toast.makeText(this, "Budík v čase "+alarm.toString()+" smazán.", Toast.LENGTH_SHORT).show();
-                AlarmManagerHelper.startAlarmPendingIntent(this);
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 break;
             default:
 
@@ -154,7 +154,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                 Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
                 alarms.add(newAlarm);
                 alarmArrayAdapter.notifyDataSetChanged();
-                AlarmManagerHelper.startAlarmPendingIntent(this);
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
             }
         }
     }

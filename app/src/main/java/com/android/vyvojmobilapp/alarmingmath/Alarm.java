@@ -1,5 +1,6 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -131,6 +132,8 @@ public class Alarm implements Parcelable, Cloneable {
         this.qr = qr;
     }
 
+
+    // honza: gettery settery snad jasny
     public int getHour() {
         return hour;
     }
@@ -189,6 +192,14 @@ public class Alarm implements Parcelable, Cloneable {
         return (Alarm) super.clone();
     }
 
+    /**
+     * Returns snoozing version of alarm, which is 5 minutes later then alarm
+     *
+     * @author Tran Tuan Hiep
+     * @param currDay current day in week
+     * @return snoozing version of alarm, which is delayed 5
+     * @throws CloneNotSupportedException
+     */
     public Alarm getSnoozingVersion(int currDay) throws CloneNotSupportedException {
         // honza: naclonujeme si budik at nemusime kopirovat vsechno rucne
         Alarm snoozeAlarm = this.clone();
@@ -214,7 +225,7 @@ public class Alarm implements Parcelable, Cloneable {
     }
 
 
-    //nasleduji metody impementující rozhraní Parcelable - vygenerovano pomoci http://www.parcelabler.com
+    // nasleduji metody impementující rozhraní Parcelable - vygenerovano pomoci http://www.parcelabler.com
     // honza: tady jsem to nechal vygenerovat znovu kvuli dalsi polozce
     protected Alarm(Parcel in) {
         hour = in.readInt();
@@ -275,4 +286,31 @@ public class Alarm implements Parcelable, Cloneable {
     public boolean isSnoozingAlarm() {
         return alarmType == AlarmType.SNOOZE;
     }
+
+
+    /**
+     * create Parcel from alarm
+     * @return Parcel containing current instance of alarm
+     */
+    public Parcel createParcel() {
+        Parcel parcel = Parcel.obtain();
+        writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
+        return parcel;
+    }
+
+    /**
+     * extract an alarm from intent
+     * @param intent i
+     * @return alarm saved on intent.
+     */
+    public static Alarm extractAlarmFromIntent(Intent intent) {
+        byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(arr, 0, arr.length);
+        parcel.setDataPosition(0);
+        return Alarm.CREATOR.createFromParcel(parcel);
+    }
+
 }

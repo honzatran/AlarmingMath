@@ -25,8 +25,13 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
     private String TAG = AlarmResponse.class.getName();
     private PowerManager.WakeLock mWakeLock;
     private Fragment fragment;
+
+    // budik ktery zvoni
     private Alarm alarm;
+    // runnable, ktery spusti se asi tak minutu po tom co obrazovka sviti a zvoni budik
+    // vypne obrazovku, a odlozi budik o nejakej cas
     private Runnable wakeLockReleaser;
+    // to co se stara o spusteni wakeLockReleaser
     private Handler handler;
 
     private int WAKELOCK_TIMEOUT = 60 * 1000;
@@ -37,15 +42,12 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         setContentView(R.layout.activity_alarm_response);
 
         Intent intent = getIntent();
-
-        // honza: oprava bugu s parceable a pending intentem
-        // normalne nejakej bug co hazi vyjimku, kdyz zavolam intent.getExtra(Alarm.ALARM_FLAG);
-        byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);
-        Parcel parcel = Parcel.obtain();
-        parcel.unmarshall(arr, 0, arr.length);
-        parcel.setDataPosition(0);
-
-        alarm = Alarm.CREATOR.createFromParcel(parcel);
+//        byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);
+//        Parcel parcel = Parcel.obtain();
+//        parcel.unmarshall(arr, 0, arr.length);
+//        parcel.setDataPosition(0);
+        // extrahujeme budik z intentu
+        alarm = Alarm.extractAlarmFromIntent(intent);
 
         Toast.makeText(this, alarm.toString(),Toast.LENGTH_LONG).show();
 
@@ -53,10 +55,11 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            // honza : tady vytvareni framentu pres factory, at je to hezci
+            // pomoci factory vytvarime framentu jako odezvu dle budiku
             FragmentResponseFactory factory = new FragmentResponseFactory();
             fragment = factory.createResponseFragment(alarm);
 
+            // odezva do obrazovky
             fragmentTransaction.add(R.id.response_layout, fragment);
             fragmentTransaction.commit();
 
@@ -78,11 +81,12 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
                     Log.v(TAG, "Wake lock released runnable");
                     snoozeAlarm(null);
                 }
-
             }
         };
 
         handler = new Handler();
+
+        // za WAKELOCK_TIMEOUT minut spustime wakeLockReleaser
         handler.postDelayed(wakeLockReleaser, WAKELOCK_TIMEOUT);
     }
 
@@ -141,18 +145,23 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * metoda, ktera zrusi budik na zaklade interakce s uzivatelem
+     * @param view
+     */
     public void dismissAlarm(View view) {
         // honza : metoda ktera se vola po stisknuti tlacitka dismiss
         returnToNormalState();
         checkAlarmType();
-        //... a vratime se na hlavni obrazovku
-//        Intent intent = new Intent(this, AlarmMainActivity.class);
-//        startActivity(intent);
-        // honza : ukoncime aktivitu servicu
+        // stopneme sluzbu z ktery se spousti ResponseActivity
         stopService(new Intent(getApplicationContext(), AlarmService.class));
+        // ukoncime tuhle aktivitu
         finish();
     }
 
+    /**
+     * zhasne obrazovku a prerusi zvoneni budiku
+     */
     private void returnToNormalState() {
         stopService(new Intent(getApplicationContext(), RingtonePlayerService.class));
 
@@ -162,19 +171,29 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
+        // stopne wakeLockReleasera
         handler.removeCallbacks(wakeLockReleaser);
     }
 
+    /**
+     * metoda ktera odlozi budik
+     * @param view muze byt null
+     */
     public void snoozeAlarm(View view) {
         try {
             returnToNormalState();
+
+            // vytvorime odlozeny budik
             Alarm snoozedAlarm = alarm.getSnoozingVersion(Calendar.getInstance().
                     get(Calendar.DAY_OF_WEEK) - 1);
+
             checkAlarmType();
 
             AlarmDatabase dtb = new AlarmDatabase(this);
+            // pridame novy budik
             dtb.addAlarm(snoozedAlarm);
-            AlarmManagerHelper.startAlarmPendingIntent(this);
+            AlarmManagerHelper.startAlarmPendingIntent(this, false);
+            // stopne servicu z ktery jsme spousteli activitu a ukoncime tuhle aktivitu
             stopService(new Intent(getApplicationContext(), AlarmService.class));
             finish();
         }
@@ -183,6 +202,9 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         }
     }
 
+    /**
+     * koukne se jestli s budikem neni potreba provadet dodatecne operace
+     */
     private void checkAlarmType() {
         AlarmType alarmType = alarm.getAlarmType();
 
@@ -198,19 +220,26 @@ public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFr
         }
     }
 
+    /**
+     * deaktivuje budik
+     */
     private void reactToOneShotAlarm() {
         AlarmDatabase dtb = new AlarmDatabase(this);
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         // deaktivujeme alarm
         dtb.setAlarmActive(false, alarm.getId());
-        AlarmManagerHelper.startAlarmPendingIntent(this);
+        AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
 
+
+    /**
+     * vymaze budik z dtb
+     */
     private void reactToSnoozingAlarm() {
         AlarmDatabase dtb = new AlarmDatabase(this);
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         dtb.deleteAlarm(alarm.getId());
-        AlarmManagerHelper.startAlarmPendingIntent(this);
+        AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
 
     @Override

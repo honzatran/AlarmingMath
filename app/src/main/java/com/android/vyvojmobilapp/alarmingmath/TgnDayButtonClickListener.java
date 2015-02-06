@@ -6,10 +6,18 @@ import junit.framework.Assert;
 
 /**
  * Created by honza on 1/22/15.
- * listener pro klikani dnu
+ * listener pro klikani dnu a activite AlarmCreate
  */
 public class TgnDayButtonClickListener implements View.OnClickListener {
     DayRecorder recorder;
+
+    // seznam vsech cudliku ktery nam signalizujou den zazvoneni
+    static public int [] tgnDaysBtnIds =  {
+            R.id.sunday_toggle_btn, R.id.monday_toggle_btn,
+            R.id.tuesday_toggle_btn, R.id.wednesday_toggle_btn,
+            R.id.thursday_toggle_btn, R.id.friday_toggle_btn,
+            R.id.saturday_toggle_btn
+    };
 
     public TgnDayButtonClickListener() {
         this.recorder = new DayRecorder();
@@ -27,16 +35,15 @@ public class TgnDayButtonClickListener implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
 
-        int[] daysBtnIds = DayRecorder.tgnButtleIds;
 
         int i = 0;
-        for (; i < daysBtnIds.length; i++) {
-            if (daysBtnIds[i] == id) {
+        for (; i < tgnDaysBtnIds.length; i++) {
+            if (tgnDaysBtnIds[i] == id) {
                 break;
             }
         }
 
-        if (id == daysBtnIds.length)
+        if (id == tgnDaysBtnIds.length)
         {
             Assert.assertTrue("unreachable state in program", false);
         }

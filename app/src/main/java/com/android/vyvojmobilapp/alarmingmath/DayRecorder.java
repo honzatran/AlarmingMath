@@ -7,18 +7,16 @@ import android.os.Parcel;
  * Created by honza on 1/22/15.
  * keeps track of actived days
  */
+
+/**
+ * udrzuje informace o dnech v tydnu v kterych zvoni budik
+ */
 public class DayRecorder implements Parcelable {
-    // order of bit in mask,
-    // Su, Mo, Tu, We, Th, Fr, Sa, not used
-    // 0, 1, 2 ...
+    // zakodovany do bitovy masky, at je to jednoduchy zapsat do databaze
+    // dny: Su, Mo, Tu, We, Th, Fr, Sa
+    // bity: 0, 1, 2, 3, 4, 5, 6
     byte mask;
 
-    static public int [] tgnButtleIds =  {
-            R.id.sunday_toggle_btn, R.id.monday_toggle_btn,
-            R.id.tuesday_toggle_btn, R.id.wednesday_toggle_btn,
-            R.id.thursday_toggle_btn, R.id.friday_toggle_btn,
-            R.id.saturday_toggle_btn
-    };
 
     public DayRecorder() {
         this.mask = 0;

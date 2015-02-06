@@ -5,7 +5,7 @@ import android.util.Log;
 
 /**
  * Created by honza on 1/24/15.
- * factory na vytvareni reakci na budik
+ * factory na vytvareni reakci(simple, QR, matematickej priklad) na budik
  */
 public class FragmentResponseFactory {
     private String TAG = FragmentResponseFactory.class.getName();

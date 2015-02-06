@@ -123,7 +123,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
     private void setUpDaysButtons() {
         Resources res = getResources();
-        int[] tgnDaysIds = DayRecorder.tgnButtleIds;
+        int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
 
         daysListener = new TgnDayButtonClickListener();
 
@@ -178,9 +178,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
             qr = qrSpinnerAdapter.getItem(qrSpinner.getSelectedItemPosition());
         }
 
-
-
-
         if (uri == null) {
             uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         }
@@ -201,10 +198,11 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
             if (hour <= calendar.get(Calendar.HOUR) &&
                     minute < calendar.get(Calendar.MINUTE)) {
+                // cas uz dnes uplynul
                 // naplanuj na dalsi den
                 dayRecorder.setDay(true, (currentDay + 1) % 7);
             } else {
-                // naplanuj budik na dnesek
+                // cas jeste neuplynul tak naplanuj budik na dnesek
                 dayRecorder.setDay(true, currentDay);
             }
 

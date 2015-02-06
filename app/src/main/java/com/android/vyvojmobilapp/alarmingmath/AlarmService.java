@@ -35,7 +35,7 @@ public class AlarmService extends Service {
         getApplication().startActivity(responseIntent);
 
         // honza: nastavi vsechny dalsi budiky
-        AlarmManagerHelper.startAlarmPendingIntent(this);
+        AlarmManagerHelper.startAlarmPendingIntent(this, false);
         return super.onStartCommand(intent, flags, startId);
     }
 
