@@ -29,4 +29,10 @@
     <string name="dialog_confirm">Uložit</string>
     <string name="qrClearScansText">Clear all</string>
 
+    <string name="math_title">Math ringing...</string>
+    <string name="math_solve">Solve:</string>
+    <string name="math_example"></string>
+    <string name="math_check_result">Check result</string>
+    <string name="math_ringing">Math ringing</string>
+
 </resources>

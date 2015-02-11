@@ -21,7 +21,8 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class AlarmResponse extends Activity implements QrResponseFragment.OnQrFragmentInteractionListener {
+public class AlarmResponse extends Activity
+        implements QrResponseFragment.OnQrFragmentInteractionListener, MathResponseFragment.OnMathFragmentInteractionListener {
     private String TAG = AlarmResponse.class.getName();
     private PowerManager.WakeLock mWakeLock;
     private Fragment fragment;

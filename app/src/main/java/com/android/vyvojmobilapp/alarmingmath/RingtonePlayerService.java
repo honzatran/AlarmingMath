@@ -43,6 +43,11 @@ public class RingtonePlayerService extends Service {
     }
 
     private void play(Uri ringtoneUri, int volume, boolean vibrate) {
+
+        // todo smazat return
+        // marketa - ladeni - muj emulator si neporadi se zvonenim
+//        if (true) return;
+
         if (!isPlaying) {
             isPlaying = true;
 

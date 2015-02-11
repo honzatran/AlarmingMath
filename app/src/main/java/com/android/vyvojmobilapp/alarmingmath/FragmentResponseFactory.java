@@ -18,10 +18,10 @@ public class FragmentResponseFactory {
                 Log.i(TAG, "Starting QR response");
                 fragment = QrResponseFragment.newInstance(alarm);
                 break;
-//            case Alarm.MATH:
-//                Log.i(TAG, "Starting QR response");
-//                tady vytvorit potom math response
-//                break;
+            case Alarm.MATH:
+                Log.i(TAG, "Starting Math response");
+                fragment = MathResponseFragment.newInstance(alarm);
+                break;
             default:
                 Log.i(TAG, "Starting simple response");
                 fragment = SimpleResponseFragment.newInstance(alarm);
