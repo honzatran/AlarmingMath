@@ -60,8 +60,8 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
         menu.setHeaderTitle("Options for alarm at " + alarm.toString());
-        menu.add(1, 1, 1, "Details");
-        menu.add(1, 2, 2, "Delete");
+        menu.add(1, 1, 1, R.string.details);
+        menu.add(1, 2, 2, R.string.delete_alarm);
     }
 
     // This method is called when user selects an Item in the Context menu

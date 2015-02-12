@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AlarmingMath</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="start_alarm">Ulož budík</string>
+    <string name="create_alarm">Vytvoř budíl</string>
+    <string name="dismiss_alarm">Zastav budík</string>
+    <string name="delete_alarm">Smaž budík</string>
+
+
+    <string name="title_activity_alarm_create">AlarmCreateActivity</string>
+    <string name="title_activity_alarm_response">AlarmResponse</string>
+    <string name="alarm_ring">Budík zvoní!</string>
+    <string name="alarmNameHint">nazev budiku</string>
+    <string name="delete_all">Smaž všechny budíky</string>
+    <string name="snooze_alarm">Odlož budík</string>
+    <string name="scan">Skanuj!</string>
+    <string name="title_activity_alarm_response_qr">AlarmResponseQR</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="monday">Po</string>
+    <string name="sunday">Ne</string>
+    <string name="saturday">So</string>
+    <string name="friday">Pá</string>
+    <string name="thursday">Čt</string>
+    <string name="wednesday">St</string>
+    <string name="tuesday">Út</string>
+    <string name="qrNewScanText">Nový scan</string>
+    <string name="ringtonePickerText">Vyberte vyzvánění...</string>
+    <string name="dialog_setQrHint">Zadejte popis identifikující naskenovaný kód (zobrazí se při buzení) (např. \"zubní pasta\")</string>
+    <string name="dialog_confirm">Uložit</string>
+    <string name="qrClearScansText">Vymaž vše</string>
+
+    <string name="activate">Aktivuj budík</string>
+    <string name="deactivate">Deaktivuj budík</string>
+    <string name="details">Detaily</string>
+
+    <string name="math_title">Matika zvoní...</string>
+    <string name="math_solve">Vyřeš:</string>
+    <string name="math_example"></string>
+    <string name="math_check_result">Zkontroluj výsledek</string>
+    <string name="math_ringing">Matika zvoní</string>
+
+
+
+</resources>

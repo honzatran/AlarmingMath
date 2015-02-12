@@ -7,10 +7,12 @@
     <string name="start_alarm">Start alarm</string>
     <string name="create_alarm">Create alarm</string>
     <string name="dismiss_alarm">Dismiss alarm</string>
+    <string name="delete_alarm">Delete alarm</string>
+
     <string name="title_activity_alarm_create">AlarmCreateActivity</string>
     <string name="title_activity_alarm_response">AlarmResponse</string>
     <string name="alarm_ring">Alarm is ringing!</string>
-    <string name="alarmNameHint">nazev budiku</string>
+    <string name="alarmNameHint">Alarms name</string>
     <string name="delete_all">Clear alarms</string>
     <string name="snooze_alarm">Snooze</string>
     <string name="scan">Scan!</string>
@@ -24,10 +26,18 @@
     <string name="wednesday">We</string>
     <string name="tuesday">Tu</string>
     <string name="qrNewScanText">Nový scan</string>
-    <string name="ringtonePickerText">Vyberte vyzvánění...</string>
-    <string name="dialog_setQrHint">Zadejte popis identifikující naskenovaný kód (zobrazí se při buzení) (např. \"zubní pasta\")</string>
-    <string name="dialog_confirm">Uložit</string>
+    <string name="ringtonePickerText">Choose ringtone...</string>
+
+    <string name="dialog_setQrHint">
+        Enter description identifying scanned code(shows up when the alarm is ringing)
+    </string>
+
+    <string name="dialog_confirm">Save</string>
     <string name="qrClearScansText">Clear all</string>
+
+    <string name="activate">Activate alarm</string>
+    <string name="deactivate">Deactivate alarm</string>
+    <string name="details">Details</string>
 
     <string name="math_title">Math ringing...</string>
     <string name="math_solve">Solve:</string>
