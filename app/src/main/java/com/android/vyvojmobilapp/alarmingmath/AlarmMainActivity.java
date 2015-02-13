@@ -21,7 +21,8 @@ public class AlarmMainActivity extends ActionBarActivity {
     private String TAG = "MAIN ACTIVITY";
     ListView alarmListView;
     AlarmContainer alarms;
-    ArrayAdapter<Alarm> alarmArrayAdapter;
+    ArrayAdapter<Alarm> alarmArrayAdapter2;
+    AlarmListAdapter alarmArrayAdapter;
     int counter;
 
     @Override
@@ -34,8 +35,9 @@ public class AlarmMainActivity extends ActionBarActivity {
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
 
         alarms = new AlarmContainer(alarmDatabase);
-        alarmArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+        alarmArrayAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 alarms);
+        alarmArrayAdapter = new AlarmListAdapter(this, R.layout.listview_main_item, alarms);
 
         alarmListView = (ListView)findViewById(R.id.alarm_list);
         alarmListView.setAdapter(alarmArrayAdapter);

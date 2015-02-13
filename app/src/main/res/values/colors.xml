@@ -2,4 +2,9 @@
 <resources>
     <color name="transp">#45000000</color>
     <color name="black">#000</color>
+
+    <color name="dark_grey">#333</color>
+
+    <color name="create_line">#999</color>
+    <color name="create_bg">#fff</color>
 </resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/listItem_time"
+        android:text="cas"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:textSize="30sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/listItem_alarmName"
+        android:text="jmeno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/listItem_time"
+        android:layout_toEndOf="@id/listItem_time"
+        android:textSize="20sp"
+        android:textColor="@color/dark_grey"/>
+
+    <TextView
+        android:id="@+id/listItem_method"
+        android:text="metoda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/listItem_time"
+        android:layout_toEndOf="@id/listItem_time"
+        android:layout_below="@id/listItem_alarmName"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:layout_marginRight="10dp"
+        />
+
+    <TextView
+        android:id="@+id/listItem_repeat"
+        android:text="opakovani"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/listItem_method"
+        android:layout_toEndOf="@id/listItem_method"
+        android:layout_below="@id/listItem_alarmName"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        />
+
+    <!-- todo tady misto text view dat image view -->
+    <TextView
+        android:id="@+id/listItem_imgActive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="IMG"/>
+
+
+
+</RelativeLayout>
