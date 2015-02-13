@@ -33,6 +33,7 @@ public class RingtonePlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getBooleanExtra(START_PLAY, false)) {
+
             Uri ringtone = Uri.parse(intent.getStringExtra(RINGTONE));
             int volume = intent.getIntExtra(VOLUME, 75);
             boolean vibrate = intent.getBooleanExtra(VIBRATE, true);

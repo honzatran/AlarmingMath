@@ -1,9 +1,8 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +17,17 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class SimpleResponseFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ALARM = "alarm";
 
-
-    // TODO: Rename and change types of parameters
     private Alarm alarm;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param alarm Parameter 1.
-     * @return A new instance of fragment NoTask.
+     * @param alarm Budik, ktery prave zvoni.
+     * @return A new instance of fragment SimpleFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static SimpleResponseFragment newInstance(Alarm alarm) {
         SimpleResponseFragment fragment = new SimpleResponseFragment();
         Bundle args = new Bundle();

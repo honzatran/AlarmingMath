@@ -9,17 +9,25 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Trida pro udrzovani SQLite databaze ulozenych QR ci barcode scanu.
+ */
 public class QrDatabase extends SQLiteOpenHelper {
-
     public static final int version = 1;
     public static final String dbName = "qrDatabase.db";
 
+    /**
+     * Query pro vytvoreni tabulky scanu ve vhodnem formatu.
+     */
     private static final String CREATE_ALARM_TABLE =
             "CREATE TABLE " + QrDtbColumns.name + " (" +
                     QrDtbColumns._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     QrDtbColumns.column_hint + " TEXT, " +
                     QrDtbColumns.column_code + " TEXT)";
 
+    /**
+     * Query pro vymazani tabulky scanu.
+     */
     public static final String DELETE_ALARM_TABLE =
             "DROP TABLE IF EXISTS " + QrDtbColumns.name;
 
@@ -46,35 +54,29 @@ public class QrDatabase extends SQLiteOpenHelper {
         return values;
     }
 
-
+    /**
+     * Prida QR scan do db.
+     * @param qr QR scan
+     * @return id nove pridaneho scanu
+     */
     public long addQr(QR qr) {
         return getWritableDatabase().insert(QrDtbColumns.name,
                 null, convertToContentValue(qr));
     }
 
+    /**
+     * Smaze vsechny scany z db.
+     */
     public void deleteAll() {
         getWritableDatabase().execSQL(
                 "delete from " + QrDtbColumns.name
         );
     }
 
-    public QR getQR(long id) {
-        // neozkouseny
-        SQLiteDatabase dtb = getReadableDatabase();
-
-        String SQL_SELECT_SPECIFIC = "SELECT * FROM " + QrDtbColumns.name +
-                " WHERE " + QrDtbColumns._ID + " = " + id;
-
-        Cursor c = dtb.rawQuery(SQL_SELECT_SPECIFIC, null);
-
-        if (c.moveToNext()) {
-            return convertToQR(c);
-        }
-
-        return null;
-    }
-
-
+    /**
+     * Vrati vsechny scany ulozene v db.
+     * @return seznam scanu ulozenych v db
+     */
     public List<QR> getQRs() {
         SQLiteDatabase dtb = this.getReadableDatabase();
         String sqlSelect = "SELECT * FROM " + QrDtbColumns.name;
@@ -101,8 +103,6 @@ public class QrDatabase extends SQLiteOpenHelper {
         String hint = c.getString(c.getColumnIndex(QrDtbColumns.column_hint));
         String code = c.getString(c.getColumnIndex(QrDtbColumns.column_code));
 
-
-        long id = c.getLong(c.getColumnIndex(QrDtbColumns._ID));
         return new QR(hint,code);
     }
 }

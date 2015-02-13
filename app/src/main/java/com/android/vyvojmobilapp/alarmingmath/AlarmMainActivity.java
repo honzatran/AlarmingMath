@@ -14,9 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-// dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
-
-// TODO podpora budiku v ruznych dnech, aktivace a deaktivace budiku + zabudovani mechanismu pro ruzny response
 public class AlarmMainActivity extends ActionBarActivity {
     private String TAG = "MAIN ACTIVITY";
     ListView alarmListView;
@@ -30,7 +27,7 @@ public class AlarmMainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         AlarmDatabase alarmDatabase = new AlarmDatabase(this);
 
-        //--debugging purposes
+        //--debugging purposes (mazani databaze - nutno pri zmene sloupcu)
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
 
         alarms = new AlarmContainer(alarmDatabase);
@@ -59,7 +56,7 @@ public class AlarmMainActivity extends ActionBarActivity {
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
-        menu.setHeaderTitle("Options for alarm at " + alarm.toString());
+        menu.setHeaderTitle(getString(R.string.alarmContextMenu) + alarm.toString());
         menu.add(1, 1, 1, R.string.details);
         menu.add(1, 2, 2, R.string.delete_alarm);
     }
@@ -92,19 +89,16 @@ public class AlarmMainActivity extends ActionBarActivity {
                 break;
             case 2: //delete
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
-                alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
+                alarms.remove(alarm);
                 alarmArrayAdapter.notifyDataSetChanged();  // important
                 Toast.makeText(this, "Budík v čase "+alarm.toString()+" smazán.", Toast.LENGTH_SHORT).show();
                 AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 break;
             default:
-
         }
 
         return true;
     }
-
-
 
 
     @Override
@@ -129,6 +123,10 @@ public class AlarmMainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Spusti aktivitu pro vytvoreni noveho budiku (pomoci startActivityForResult).
+     * @param view
+     */
     public void showCreateAlarm(View view) {
         Log.v(TAG, "create pressed");
 
@@ -137,6 +135,10 @@ public class AlarmMainActivity extends ActionBarActivity {
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * Vyprazdni databazi budiku.
+     * @param view
+     */
     public void clearAlarms(View view) {
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         alarms.clear();

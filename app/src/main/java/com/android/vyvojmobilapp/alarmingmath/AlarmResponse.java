@@ -7,10 +7,9 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Parcel;
-import android.os.PowerManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +46,7 @@ public class AlarmResponse extends Activity
 //        Parcel parcel = Parcel.obtain();
 //        parcel.unmarshall(arr, 0, arr.length);
 //        parcel.setDataPosition(0);
+
         // extrahujeme budik z intentu
         alarm = Alarm.extractAlarmFromIntent(intent);
 

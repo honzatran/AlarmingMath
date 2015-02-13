@@ -79,11 +79,21 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Prida budik do databaze.
+     * @param alarm budik, ktery bude pridan
+     * @return Vygenerovane id nove pridaneho budiku.
+     */
     public long addAlarm(Alarm alarm) {
         return getWritableDatabase().insert(AlarmDtbColumns.name,
                 null, convertToContentValue(alarm));
     }
 
+    /**
+     * Smaze budik s danym id z databaze.
+     * @param id id budiku, ktery bude smazan
+     * @return
+     */
     public int deleteAlarm(long id) {
         // neozkouseny
         return getWritableDatabase().delete(
@@ -95,6 +105,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         );
     }
 
+    /**
+     * Aktivuje ci deaktivuje budik s danym id v databazi.
+     * @param active
+     * @param id
+     */
     public void setAlarmActive(boolean active, long id) {
         SQLiteDatabase dtb = getWritableDatabase();
 
@@ -106,28 +121,19 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Smaze vsechny ulozene budiky.
+     */
     public void deleteAll() {
         getWritableDatabase().execSQL(
                 "delete from " + AlarmDtbColumns.name
         );
     }
 
-    public Alarm getAlarm(long id) {
-        // neozkouseny
-        SQLiteDatabase dtb = getReadableDatabase();
-
-        String SQL_SELECT_SPECIFIC = "SELECT * FROM " + AlarmDtbColumns.name +
-                " WHERE " + AlarmDtbColumns._ID + " = " + id;
-
-        Cursor c = dtb.rawQuery(SQL_SELECT_SPECIFIC, null);
-
-        if (c.moveToNext()) {
-            return convertToAlarm(c);
-        }
-
-        return null;
-    }
-
+    /**
+     * Vrati seznam vsech budiku v databazi.
+     * @return Seznam budiku v databazi.
+     */
     public List<Alarm> getAlarms() {
         SQLiteDatabase dtb = this.getReadableDatabase();
         String sqlSelect = "SELECT * FROM " + AlarmDtbColumns.name;

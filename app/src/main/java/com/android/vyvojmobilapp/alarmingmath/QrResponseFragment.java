@@ -26,18 +26,13 @@ import com.google.zxing.integration.android.IntentResult;
  * create an instance of this fragment.
  */
 public class QrResponseFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ALARM = "alarm";
 
-
-    // TODO: Rename and change types of parameters
     private Alarm alarm;
     private String item;
     private String corr_qr_code;
     private View _rootView;
-    private String ringingText = "To stop or snooze the alarm, find and scan the barcode from the following item:";
-
+    private String ringingText;
 
 
     private OnQrFragmentInteractionListener mListener;
@@ -46,10 +41,9 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param alarm Parameter 1.
-     * @return A new instance of fragment NoTask.
+     * @param alarm budik, ktery prave zvoni.
+     * @return A new instance of fragment QrResponseFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static QrResponseFragment newInstance(Alarm alarm) {
         QrResponseFragment fragment = new QrResponseFragment();
         Bundle args = new Bundle();
@@ -76,13 +70,13 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         if (getArguments() != null) {
+            ringingText = getResources().getString(R.string.qrRingingText);
+
             alarm = getArguments().getParcelable(ARG_ALARM);
             item = alarm.getQr().getHint();
-            //item = "ISIC";
             corr_qr_code = alarm.getQr().getCode();
             Log.i("qr","kod: " + corr_qr_code);
-            //corr_qr_code = "FKMPHWF";
-        }
+            }
     }
 
     @Override
@@ -129,11 +123,15 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Spusti aktivitu pro skenovani QR ci caroveho kodu.
+     */
     public void scan() {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setPrompt("Naskenujte kód z předmětu: " + item);
+        integrator.setPrompt(R.string.qrScanPrompt + item);
         IntentIntegrator.forFragment(this).initiateScan();
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         Log.i("qr", "called onactivityresult");
@@ -150,7 +148,7 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
             }
             else{
                 Log.i("qr", "wrong item");
-                ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText("Špatný předmět! Zkuste to znova.");
+                ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText(R.string.qrScanWrong);
             }
 
         }
@@ -172,7 +170,6 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnQrFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 

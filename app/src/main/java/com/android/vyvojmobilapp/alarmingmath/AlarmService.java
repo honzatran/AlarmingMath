@@ -1,17 +1,14 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by honza on 12/15/14.
  */
 public class AlarmService extends Service {
-    // honza opsany z netu
     public static String TAG = AlarmService.class.getName();
 
     @Override

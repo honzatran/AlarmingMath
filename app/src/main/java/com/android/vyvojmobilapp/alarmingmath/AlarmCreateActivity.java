@@ -1,6 +1,5 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,8 +7,8 @@ import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +18,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -34,25 +30,25 @@ import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class AlarmCreateActivity extends ActionBarActivity {
-    TimePicker picker;
-    EditText nameField;
-    Switch activeSwitch;
-    Switch vibrateSwitch;
-    Spinner snoozeDelaySpinner;
-    Spinner lengthOfRingingSpinner;
-    Spinner methodSpinner, difficultySpinner, qrSpinner;
-    SeekBar volumeSeekbar;
-    Button qrNewScan;
-    Uri uri = null;
-    QrDatabase qrDatabase;
-    String qrHint;
-    TgnDayButtonClickListener daysListener;
+    private TimePicker picker;
+    private EditText nameField;
+    private Switch activeSwitch;
+    private Switch vibrateSwitch;
+    private Spinner snoozeDelaySpinner;
+    private Spinner lengthOfRingingSpinner;
+    private Spinner methodSpinner, difficultySpinner, qrSpinner;
+    private SeekBar volumeSeekbar;
+    private Button qrNewScan;
+    private Uri uri = null;
+    private QrDatabase qrDatabase;
+    private TgnDayButtonClickListener daysListener;
 
     private static String TAG = AlarmCreateActivity.class.getName();
+
+    //adapter pro napojeni spinneru s ulozenymi scanu kodu na databazi
     ArrayAdapter<QR> qrSpinnerAdapter;
 
     @Override
@@ -60,17 +56,14 @@ public class AlarmCreateActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_create);
 
+        //napojeni spinneru na databazi scanu
         qrDatabase = new QrDatabase(this);
-
-
-         qrSpinnerAdapter = new ArrayAdapter<>(this,
-                R.layout.spinner_item, qrDatabase.getQRs());
+        qrSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, qrDatabase.getQRs());
         qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
-
+        //nastaveni TimePickeru
         picker = (TimePicker) findViewById(R.id.alarm_time_picker);
         picker.setIs24HourView(true);
-
         //defaultne nastavi napr. pri spusteni v 15:27 cas 3:27, nasleduje fix
         picker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 
@@ -83,8 +76,11 @@ public class AlarmCreateActivity extends ActionBarActivity {
         difficultySpinner = (Spinner)findViewById(R.id.difficulty_spinner);
         qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
         qrNewScan = (Button) findViewById(R.id.qrNewScan);
+        volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
+
         qrSpinner.setAdapter(qrSpinnerAdapter);
 
+        //zpristupneni dalsich nastaveni pro jednotlive metody buzeni podle aktualni hodnoty methodSpinneru
         methodSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -116,8 +112,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
                     }
                 }
         );
-        volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
-        
+
         setUpDaysButtons();
     }
 
@@ -151,11 +146,16 @@ public class AlarmCreateActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Vytvori instanci tridy Alarm podle parametru vybranych uzivatelem, vlozi jej do intentu urceneho zpet do
+     * AlarmMainActivity a ukonci soucasnou aktivitu AlarmCreateActivity.
+     * @param view
+     */
     public void createAlarm(View view) {
+        //inicializace parametru pro konstruktor budiku podle stavu jednotlivych komponent GUI
         int hour = picker.getCurrentHour();
         int minute = picker.getCurrentMinute();
         String name = nameField.getText().toString();
@@ -172,23 +172,22 @@ public class AlarmCreateActivity extends ActionBarActivity {
         QR qr = new QR("","");
         if (method == Alarm.QR_CODE){
             if (qrSpinner.getSelectedItemPosition() == Spinner.INVALID_POSITION){
+                //pokud uzivatel zvolil buzeni pomoci QR kodu, musi si nejaky vybrat (ci vytvorit novy), jinak neni dovoleno opustit aktivitu
                 Toast.makeText(this, "No QR code selected!", Toast.LENGTH_SHORT).show();
                 return;
             }
             qr = qrSpinnerAdapter.getItem(qrSpinner.getSelectedItemPosition());
         }
 
+        //pokud uzivatel nevybral vyzvaneci melodii, pouzijeme defaultni
         if (uri == null) {
             uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         }
-
         String ringtoneUri = uri.toString();
 
         DayRecorder dayRecorder = daysListener.getRecorder();
         Log.v(TAG, "mask of days" + dayRecorder.getMask());
         byte mask = dayRecorder.getMask();
-
-
 
         AlarmType alarmType;
         // budik nebyl naplanovanej na zadnej den
@@ -212,7 +211,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         }
 
 
-
+        //vytvoreni instance tridy Alarm
         Alarm alarm = new Alarm(
                 hour, minute, ringtoneUri,
                 snoozeDelay, lengthOfRinging, method,
@@ -222,12 +221,17 @@ public class AlarmCreateActivity extends ActionBarActivity {
         Intent intent = new Intent(this, AlarmMainActivity.class);
         intent.putExtra(Alarm.ALARM_FLAG, alarm);
         setResult(RESULT_OK, intent);
+        //navrat do AlarmMainActivity
         finish();
     }
 
+    /**
+     * Zobrazi dialog pro vyber vyzvaneci melodie.
+     * @param view
+     */
     public void onRingtonePickerClick(View view) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Vyberte melodii pro budík:");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.ringtonePickerTitle));
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_ALARM);
@@ -235,16 +239,21 @@ public class AlarmCreateActivity extends ActionBarActivity {
         startActivityForResult( intent, 0);
     }
 
+    /**
+     * Obsluhuje jednak vysledek vyberu vyzvaneni a jednak vysledek skenovani QR kodu.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        Log.i("qr", "called onactivityresult");
 
         //vysledek qr scanu
         if ((scanResult != null) && (scanResult.getContents() != null)) {
             final String scanContent = scanResult.getContents();
-            String scanFormat = scanResult.getFormatName();
 
+            //zobrazime dialog pro zadani textoveho hintu pro tento sken
             LayoutInflater li = LayoutInflater.from(this);
             View promptsView = li.inflate(R.layout.fragment_qr_set_hint, null);
 
@@ -262,12 +271,10 @@ public class AlarmCreateActivity extends ActionBarActivity {
                     .setCancelable(false)
                     .setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
+                                //vytvorime novy qr scan a vlozime do databaze
                                 public void onClick(DialogInterface dialog,int id) {
-                                    // get user input and set it to result
-                                    // edit text
-
                                     qrDatabase.addQr(new QR(userInput.getText().toString(), scanContent));
-                                    Log.i("scanResult","after db, hint: " + qrHint);
+                                    //je treba znovu vytvorit adapter (pouha notifikace o zmene dat bohuzel nefunguje)
                                     qrSpinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, qrDatabase.getQRs());
                                     qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
                                     qrSpinner.setAdapter(qrSpinnerAdapter);
@@ -280,36 +287,35 @@ public class AlarmCreateActivity extends ActionBarActivity {
             AlertDialog alertDialog = alertDialogBuilder.create();
             // show it
             alertDialog.show();
-
-
-
-
         } else
+
         //vysledek vyberu ringtone
         if (requestCode == 0 && resultCode == RESULT_OK) {
             uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            if (uri == null)
-            {
-                Log.v(TAG, "returned uri is null");
-            }
             final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
             ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
         }
-
     }
 
+    /**
+     * Spusti skenovani.
+     * @param view
+     */
     public void onQrNewScan(View view) {
         IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setPrompt("Naskenujte kód z předmětu");
-        integrator.initiateScan(); // `this` is the current Activity
+        integrator.setPrompt(getString(R.string.qrScanPrompt));
+        integrator.initiateScan();
     }
 
-
+    /**
+     * Vyprazdni databazi ulozenych skenu.
+     * @param view
+     */
     public void onQrClearAll(View view) {
         qrDatabase.deleteAll();
+        //opet je treba resetovat adapter
         qrSpinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, new ArrayList<QR>());
         qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         qrSpinner.setAdapter(qrSpinnerAdapter);
-
     }
 }

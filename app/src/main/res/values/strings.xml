@@ -25,8 +25,8 @@
     <string name="thursday">Th</string>
     <string name="wednesday">We</string>
     <string name="tuesday">Tu</string>
-    <string name="qrNewScanText">Nový scan</string>
-    <string name="ringtonePickerText">Choose ringtone...</string>
+    <string name="qrNewScanText">New scan</string>
+    <string name="ringtonePickerText">Choose ringtone…</string>
 
     <string name="dialog_setQrHint">
         Enter description identifying scanned code(shows up when the alarm is ringing)
@@ -39,10 +39,15 @@
     <string name="deactivate">Deactivate alarm</string>
     <string name="details">Details</string>
 
-    <string name="math_title">Math ringing...</string>
+    <string name="math_title">Math ringing…</string>
     <string name="math_solve">Solve:</string>
     <string name="math_example"></string>
     <string name="math_check_result">Check result</string>
     <string name="math_ringing">Math ringing</string>
+    <string name="ringtonePickerTitle">Choose ringtone for alarm:</string>
+    <string name="qrScanPrompt">Scan QR/barcode from an item</string>
+    <string name="qrScanWrong">Wrong item! Try again.</string>
+    <string name="qrRingingText">To stop the alarm, find and scan the barcode from the following item:</string>
+    <string name="alarmContextMenu">"Options for alarm at "</string>
 
 </resources>

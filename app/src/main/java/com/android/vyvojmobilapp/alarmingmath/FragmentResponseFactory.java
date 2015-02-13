@@ -14,7 +14,6 @@ public class FragmentResponseFactory {
         Fragment fragment;
         switch(alarm.getMethodId()){
             case Alarm.QR_CODE:
-                //QR
                 Log.i(TAG, "Starting QR response");
                 fragment = QrResponseFragment.newInstance(alarm);
                 break;
