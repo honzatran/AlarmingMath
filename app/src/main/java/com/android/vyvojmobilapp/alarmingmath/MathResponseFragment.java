@@ -70,9 +70,16 @@ public class MathResponseFragment
         // Inflate the layout for this fragment
         _rootView = inflater.inflate(R.layout.fragment_math_response, container, false);
 
+        // zakladni info budiku
+        TextView nameTV = (TextView)_rootView.findViewById(R.id.math_response_alarmName);
+        if (alarm.getName() != null)      // nastavit nazev pouze v pripade, ze je nejaky zadan
+            nameTV.setText(alarm.getName());
+        TextView timeTV = (TextView)_rootView.findViewById(R.id.math_response_time);
+        timeTV.setText(alarm.toString());
+
         // zobrazeni prikladu
         TextView tv = (TextView)_rootView.findViewById(R.id.math_example);
-        tv.setText(mathExpression.exprInfix);
+        tv.setText(mathExpression.exprInfix + " = ");
 
         Button b = (Button)_rootView.findViewById(R.id.math_check_result_button);
         b.setOnClickListener(this);

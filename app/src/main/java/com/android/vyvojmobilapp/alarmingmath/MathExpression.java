@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
-// marketa
-// pocita se pouze s celymi cisly (uzivatel asi po probuzeni nic jineho nezvladne)
+
+/**
+ * Created by marketa on 10.2.15.
+ * pocita se pouze s celymi cisly (uzivatel asi po probuzeni nic jineho nezvladne)
+ */
 public class MathExpression {
 
     public ArrayList<String> expr;      // vyraz v postfixu

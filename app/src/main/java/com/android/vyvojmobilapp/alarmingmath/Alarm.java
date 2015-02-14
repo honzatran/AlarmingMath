@@ -1,8 +1,11 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Calendar;
 
 /**
  * Created by honza on 12/15/14.
@@ -11,10 +14,21 @@ import android.os.Parcelable;
 //parcelable = lze připojit k intentu jako "extras"
 public class Alarm implements Parcelable, Cloneable {
     //definice konstant pro metody buzeni
+    public static final int NO_TASK = 0;
     public static final int MATH = 1;
     public static final int QR_CODE = 2;
 
     public static final String ALARM_FLAG = "alarm";
+    public static final String HOUR = "hour";
+    public static final String MINUTES = "minutes";
+    public static final String RINGTONE = "ringtone";
+    public static final String SNOOZE_DELAY = "snooze";
+    public static final String LENGTH_OF_RINGING = "length";
+    public static final String METHOD_ID = "method";
+    public static final String VOLUME = "volume";
+    public static final String IS_ACTIVE = "active";
+    public static final String IS_VIBRATE = "vibrate";
+    public static final String NAME = "name";
 
     int hour;
     int minute;
@@ -29,10 +43,15 @@ public class Alarm implements Parcelable, Cloneable {
     boolean vibrate;
     String name;
     QR qr;
+
+    // replacing one shot
+    boolean oneShot;
+
     // rika jestli je budik repeating, tj. furt se opakuje
     // nebo jestli je oneShot zazvoni jednou a pak se deaktivuje
     // nebo jestli je snooze zazvoni jednou a smaze se z databaze
     AlarmType alarmType;
+
     DayRecorder days;
 
     /**
@@ -118,12 +137,15 @@ public class Alarm implements Parcelable, Cloneable {
     public int getHour() {
         return hour;
     }
+
     public int getMinute() {
         return minute;
     }
+
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -141,12 +163,26 @@ public class Alarm implements Parcelable, Cloneable {
         return active;
     }
     public boolean isVibrate() { return vibrate; }
+
+    // marketa: pro popis budiku v seznamu (main)
+    public String getMethodToString() {
+        String ret = null;
+        if (methodId == 1)
+            ret = "Math";
+        else if (methodId == 2)
+            ret = "QR";
+
+        return ret;
+    }
+
     public DayRecorder getDays() {
         return days;
     }
+
     public String getName() {
         return name;
     }
+
     public AlarmType getAlarmType() {
         return alarmType;
     }
@@ -201,6 +237,7 @@ public class Alarm implements Parcelable, Cloneable {
 
 
     // nasleduji metody impementující rozhraní Parcelable - vygenerovano pomoci http://www.parcelabler.com
+    // honza: tady jsem to nechal vygenerovat znovu kvuli dalsi polozce
     protected Alarm(Parcel in) {
         hour = in.readInt();
         minute = in.readInt();

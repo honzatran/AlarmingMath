@@ -10,21 +10,23 @@
     </string-array>
 
     <string-array name="lengthOfRingingSpinnerItems">
-        <item>30 vteřin</item>
-        <item>1 minuta</item>
-        <item>1 minuta 30 vteřin</item>
-        <item>2 minuty</item>
-        <item>do vypnutí</item>
+        <item>30 s</item>
+        <item>60 s</item>
+        <item>90 s</item>
+        <item>120 s</item>
+        <item>until dismiss</item>
     </string-array>
+
     <string-array name="methodSpinnerItems">
-        <item>tlačítkem</item>
-        <item>vyřešením matematického příkladu</item>
-        <item>naskenováním QR kódu</item>
+        <item>button</item>
+        <item>solve math</item>
+        <item>scan QR</item>
     </string-array>
+
     <string-array name="difficultySpinnerItems">
-        <item>lehké</item>
-        <item>střední</item>
-        <item>těžké</item>
+        <item>easy</item>
+        <item>medium</item>
+        <item>hard</item>
     </string-array>
 
 </resources>

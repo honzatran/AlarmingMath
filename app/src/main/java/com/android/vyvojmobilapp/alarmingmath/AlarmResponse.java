@@ -50,7 +50,7 @@ public class AlarmResponse extends Activity
         // extrahujeme budik z intentu
         alarm = Alarm.extractAlarmFromIntent(intent);
 
-        Toast.makeText(this, alarm.toString(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, alarm.toString(),Toast.LENGTH_LONG).show();
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getFragmentManager();
