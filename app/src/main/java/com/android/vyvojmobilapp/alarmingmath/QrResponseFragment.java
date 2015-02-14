@@ -36,6 +36,7 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
     private String item;
     private String corr_qr_code;
     private View _rootView;
+    // todo vytahnout z kodu tento retezec nekam mimo
     private String ringingText = "To stop or snooze the alarm, find and scan the barcode from the following item:";
 
 
@@ -94,8 +95,17 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
         _rootView = inflater.inflate(R.layout.fragment_qr_response, container, false);
         // Find and setup subviews
 
-        ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText(ringingText);
-        ((TextView)_rootView.findViewById(R.id.qr_item)).setText(item);
+        // m: Name and time...
+        TextView nameTV = (TextView)_rootView.findViewById(R.id.qr_response_alarmName);
+        if (alarm.getName() != null)      // nastavit nazev pouze v pripade, ze je nejaky zadan
+            nameTV.setText(alarm.getName());
+        TextView timeTV = (TextView)_rootView.findViewById(R.id.qr_response_time);
+        timeTV.setText(alarm.toString());
+        TextView itemTV = (TextView)_rootView.findViewById(R.id.qr_item);
+        itemTV.setText(item);
+
+//        ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText(ringingText);
+//        ((TextView)_rootView.findViewById(R.id.qr_item)).setText(item);
 
         Button b = (Button) _rootView.findViewById(R.id.scan_button);
         b.setOnClickListener(this);
@@ -131,6 +141,7 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
 
     public void scan() {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        // todo vytahnout retezec mimo zdrojak
         integrator.setPrompt("Naskenujte kód z předmětu: " + item);
         IntentIntegrator.forFragment(this).initiateScan();
     }
