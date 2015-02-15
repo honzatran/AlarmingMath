@@ -142,7 +142,7 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
     public void scan() {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         // todo vytahnout retezec mimo zdrojak
-        integrator.setPrompt("Naskenujte kód z předmětu: " + item);
+        integrator.setPrompt(getString(R.string.qrScanPrompt) + item);
         IntentIntegrator.forFragment(this).initiateScan();
     }
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -158,10 +158,10 @@ public class QrResponseFragment extends Fragment implements View.OnClickListener
             if(scanContent.equals(corr_qr_code)){
                 Log.i("qr", "correct item");
                 ((AlarmResponse)getActivity()).dismissAlarm(getView());
-            }
-            else{
+            } else {
                 Log.i("qr", "wrong item");
-                ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText("Špatný předmět! Zkuste to znova.");
+                ((TextView)_rootView.findViewById(R.id.qr_ringing)).setText(
+                        getString(R.string.qrScanWrong));
             }
 
         }

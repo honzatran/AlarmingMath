@@ -85,7 +85,7 @@
     <string name="math_example"></string>
     <string name="math_ringing">Matika zvoní</string>
     <string name="ringtonePickerTitle">Vyberte melodii pro budík:</string>
-    <string name="qrScanPrompt">Naskenujte kód z předmětu</string>
+    <string name="qrScanPrompt">Naskenujte kód z předmětu: </string>
     <string name="qrRingingText">Pro vypnutí budíku naskenujte kód z následujícího předmětu: </string>
     <string name="qrScanWrong">Špatný předmět! Zkuste to znova.</string>
     <string name="alarmContextMenu">"Budík v čase "</string>
@@ -101,6 +101,8 @@
     <string name="minute">minut</string>
     <string name="second">vteřin</string>
     <string name="delete_msg_alarm">Budík v %s smazán</string>
+    <string name="math_succ_solved">Jste vzhůru!</string>
+    <string name="math_wrong_answer">Špatná odpověd!! Zkuste to znova.</string>
 
 
 </resources>

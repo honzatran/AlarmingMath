@@ -49,6 +49,7 @@
     <string name="qr_scan_text">Item to scan:</string>
     <string name="dialog_setQrHint">Set description of the QR code (i.e. \"toothpaste\")</string>
     <string name="dialog_confirm">Save</string>
+    <string name="qrScanWrong">Wrong item! Try it again.</string>
 
 
     <!-- menu -->
@@ -65,6 +66,7 @@
     <string name="qrNewScanText">New scan</string>
     <string name="ringtonePickerText">Pick ringtone...</string>
 
+
     <string name="qrClearScansText">Clear all</string>
     <string name="noqr_selected">No qr selected!</string>
     <string name="OK">Ok</string>
@@ -80,5 +82,7 @@
     <string name="minute">minutes</string>
     <string name="second">seconds</string>
     <string name="delete_msg_alarm">Alarm at %s erased</string>
+    <string name="math_succ_solved">You\'re awake!</string>
+    <string name="math_wrong_answer">Wrong answer!! Try it again.</string>
 
 </resources>

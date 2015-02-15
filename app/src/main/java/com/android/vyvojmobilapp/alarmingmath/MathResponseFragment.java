@@ -124,13 +124,13 @@ public class MathResponseFragment
         if (userResult != null && userResult.equals(mathExpression.result)) {        // ok
             Log.i("math", "correct answer");
             ((AlarmResponse)getActivity()).dismissAlarm(getView());
-            Toast toast = Toast.makeText(getActivity(), "You're awake!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity(), getString(R.string.math_succ_solved), Toast.LENGTH_SHORT);
             toast.show();
         }
         else {      // spatny vysledek
             Log.i("math", "wrong answer: ");
             et.setText("");     // vyprazdnit vysledek
-            Toast toast = Toast.makeText(getActivity(), "Wrong answer!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity(), getString(R.string.math_wrong_answer) , Toast.LENGTH_SHORT);
             toast.show();
         }
 
