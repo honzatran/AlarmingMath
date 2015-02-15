@@ -41,6 +41,25 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         alarmListView = (ListView)findViewById(R.id.alarm_list);
         alarmListView.setAdapter(alarmArrayAdapter);
+        alarmListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Alarm alarm = alarmArrayAdapter.getItem(arg2);
+                if (alarm.isActive()) {
+                    AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
+                    alarm.active = false;
+                } else {
+                    alarm.active = true;
+                    AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
+                }
+                // todo je potřeba zabít příslušnej intent
+                //AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
+                alarmArrayAdapter.notifyDataSetChanged();
+                AlarmManagerHelper.startAlarmPendingIntent(getApplicationContext(), true);
+                //alarmArrayAdapter.notifyDataSetChanged();
+                //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
+            }});
 
         //registrujeme tridy AlarmMainActivity jako obsluznou pro alarmListView (metody jsou nize)
         registerForContextMenu(alarmListView);
@@ -63,7 +82,8 @@ public class AlarmMainActivity extends ActionBarActivity {
         Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
         menu.setHeaderTitle("Options for alarm at " + alarm.toString());
         menu.add(1, 1, 1, "Details");
-        menu.add(1, 2, 2, "Delete");
+        menu.add(1, 2, 2, "Update");
+        menu.add(1, 3, 3, "Delete");
     }
 
     // This method is called when user selects an Item in the Context menu
@@ -92,7 +112,10 @@ public class AlarmMainActivity extends ActionBarActivity {
                                 "\nOne shot:" + alarm.isSnoozingAlarm() ,
                         Toast.LENGTH_LONG).show();
                 break;
-            case 2: //delete
+            case 2: //update
+                // todo no prostě to dodělat
+                break;
+            case 3: //delete
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important

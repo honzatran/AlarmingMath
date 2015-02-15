@@ -124,7 +124,7 @@ public class MathResponseFragment
         if (userResult != null && userResult.equals(mathExpression.result)) {        // ok
             Log.i("math", "correct answer");
             ((AlarmResponse)getActivity()).dismissAlarm(getView());
-            Toast toast = Toast.makeText(getActivity(), "Jsi vzhuru!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity(), "You're awake!", Toast.LENGTH_SHORT);
             toast.show();
         }
         else {      // spatny vysledek

@@ -79,10 +79,12 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
 
         // todo vybrat obrazky a odkomentovat nasledujici 4 radky.
         // a v listview_...xml zmenit v to do text na img view
-//        if (alarm.isActive())
+        if (alarm.isActive())
+            holder.listItem_imgActive.setImageResource(R.drawable.ic_alarm_on_black_48dp);
 //            holder.listItem_imgActive.setImageDrawable();
-//        else
-//            holder.listItem_imgActive.setImageDrawable();
+        else
+            holder.listItem_imgActive.setImageResource(R.drawable.ic_alarm_off_grey600_48dp);
+//           holder.listItem_imgActive.setImageDrawable();
 
         return row;
     }
