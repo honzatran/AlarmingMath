@@ -58,7 +58,6 @@ public class AlarmMainActivity extends ActionBarActivity {
                 //AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 alarmArrayAdapter.notifyDataSetChanged();
                 AlarmManagerHelper.startAlarmPendingIntent(getApplicationContext(), true);
-                //alarmArrayAdapter.notifyDataSetChanged();
                 //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
             }});
 
