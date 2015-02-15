@@ -51,6 +51,8 @@
     <string name="dialog_confirm">Save</string>
     <string name="qrScanWrong">Wrong item! Try it again.</string>
 
+    <string name="details">Details</string>
+    <string name="deactivate">Deactivate alarm</string>
 
     <!-- menu -->
     <string name="action_settings">Settings</string>
