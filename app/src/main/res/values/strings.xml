@@ -58,6 +58,7 @@
     <string name="action_settings">Settings</string>
     <string name="app_name">Alarming Math</string>
     <string name="title_activity_alarm_create">New Alarm</string>
+    <string name="title_activity_alarm_update">Update alarm</string>
     <string name="title_activity_alarm_response">Alarm Response</string>
     <string name="title_activity_alarm_response_qr">Alarm Response QR</string>
 

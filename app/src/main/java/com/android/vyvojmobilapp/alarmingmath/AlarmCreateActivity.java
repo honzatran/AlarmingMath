@@ -55,6 +55,9 @@ public class AlarmCreateActivity extends ActionBarActivity {
     private static String TAG = AlarmCreateActivity.class.getName();
     ArrayAdapter<QR> qrSpinnerAdapter;
 
+
+    boolean updateAlarm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +115,8 @@ public class AlarmCreateActivity extends ActionBarActivity {
         setUpDaysButtons();
 
         if (intent.hasExtra(Alarm.ALARM_FLAG)) {
+            updateAlarm = true;
+            setTitle(R.string.title_activity_alarm_update);
             setUpWidgetsFromAlarm(intent);
         }
 
@@ -125,6 +130,8 @@ public class AlarmCreateActivity extends ActionBarActivity {
         picker.setCurrentMinute(alarm.getMinute());
 
         nameField.setText(alarm.getName());
+
+        alarm.active = true;
         activeSwitch.setChecked(alarm.isActive());
         vibrateSwitch.setChecked(alarm.isVibrate());
 
@@ -135,7 +142,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         }
         methodSpinner.setSelection(alarm.getMethodId());
         if (alarm.getLengthOfRinging() == -1)
-            lengthOfRingingSpinner.setSelection(5);
+            lengthOfRingingSpinner.setSelection(lengthOfRingingSpinner.getCount() - 1);
         else
             lengthOfRingingSpinner.setSelection(alarm.getLengthOfRinging()/30);
         difficultySpinner.setSelection(alarm.getDifficulty());
@@ -206,6 +213,9 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -218,9 +228,11 @@ public class AlarmCreateActivity extends ActionBarActivity {
         boolean active = activeSwitch.isChecked();
         boolean vibrate = vibrateSwitch.isChecked();
         int snoozeDelay = Integer.parseInt(snoozeDelaySpinner.getSelectedItem().toString());
-        int lengthOfRinging = (lengthOfRingingSpinner.getSelectedItemPosition() == 5)
-                ? -1
-                : lengthOfRingingSpinner.getSelectedItemPosition()*30;
+
+        int lengthOfRinging =
+                (lengthOfRingingSpinner.getSelectedItemPosition() == lengthOfRingingSpinner.getCount() - 1)
+                ? -1 : lengthOfRingingSpinner.getSelectedItemPosition()*30;
+
         int method = methodSpinner.getSelectedItemPosition();
         int difficulty = difficultySpinner.getSelectedItemPosition();
         int volume = volumeSeekbar.getProgress();
@@ -264,8 +276,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
         } else  {
             alarmType = AlarmType.REPEATING;
         }
-
-
 
         Alarm alarm = new Alarm(
                 hour, minute, ringtoneUri,
@@ -358,5 +368,15 @@ public class AlarmCreateActivity extends ActionBarActivity {
         qrSpinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, new ArrayList<QR>());
         qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         qrSpinner.setAdapter(qrSpinnerAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (updateAlarm)  {
+            activeSwitch.setChecked(false);
+            createAlarm(null);
+        }
+
+        super.onBackPressed();
     }
 }

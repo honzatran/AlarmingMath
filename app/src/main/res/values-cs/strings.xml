@@ -65,6 +65,7 @@
     <string name="title_activity_alarm_create">Nový budík</string>
     <string name="title_activity_alarm_response">Budík zvoní</string>
     <string name="title_activity_alarm_response_qr">QR budík</string>
+    <string name="title_activity_alarm_update">Úprava budíku</string>
 
     <string name="alarm_ring">Budík zvoní!</string>
 
