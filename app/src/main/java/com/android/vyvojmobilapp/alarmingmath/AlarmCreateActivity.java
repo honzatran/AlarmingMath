@@ -110,6 +110,8 @@ public class AlarmCreateActivity extends ActionBarActivity {
         );
         volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
 
+        setUpDaysButtons();
+
         if (intent.hasExtra(Alarm.ALARM_FLAG)) {
             Alarm alarm = Alarm.extractAlarmFromIntent(intent);
 
@@ -131,13 +133,24 @@ public class AlarmCreateActivity extends ActionBarActivity {
             else
                 lengthOfRingingSpinner.setSelection(alarm.getLengthOfRinging()/30);
             difficultySpinner.setSelection(alarm.getDifficulty());
+
             //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
             //qrNewScan = (Button) findViewById(R.id.qrNewScan);
             //qrSpinner.setAdapter(qrSpinnerAdapter);
 
+            uri = Uri.parse(alarm.getRingtoneUri());
+            final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+            ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
+
+            int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
+            for (int i = 0; i < 7; i++) {
+                if (alarm.days.isDaySet(i)) {
+                    ToggleButton tgBtn = (ToggleButton) findViewById(tgnDaysIds[i]);
+                    tgBtn.setActivated(true);
+                }
+            }
         }
 
-        setUpDaysButtons();
     }
 
     private void initializeWidget() {
