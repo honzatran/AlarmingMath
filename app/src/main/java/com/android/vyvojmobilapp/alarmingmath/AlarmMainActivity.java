@@ -1,6 +1,7 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
+import android.os.Parcel;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,8 @@ public class AlarmMainActivity extends ActionBarActivity {
     ArrayAdapter<Alarm> alarmArrayAdapter2;
     AlarmListAdapter alarmArrayAdapter;
     int counter;
+    static final int ALARM_CREATE_RESULT = 1;
+    static final int ALARM_UPDATE_RESULT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,13 @@ public class AlarmMainActivity extends ActionBarActivity {
             case 2: //update
                 // todo no prostě to dodělat
                 //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
+                Parcel parcel = alarm.createParcel();
+                Intent intent = new Intent(this, AlarmCreateActivity.class);
+                intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
+                alarms.remove(alarm);
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
+                startActivityForResult(intent, ALARM_UPDATE_RESULT);
                 break;
             case 3: //delete
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
@@ -160,7 +170,7 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         Intent intent = new Intent(this, AlarmCreateActivity.class);
         // honza: ceka na vysledek aktivity vytvor budik
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, ALARM_CREATE_RESULT);
     }
 
     public void clearAlarms(View view) {
@@ -173,9 +183,17 @@ public class AlarmMainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode == ALARM_CREATE_RESULT) {
             if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
                 // honza: dosel novej budik
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
+                Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
+                alarms.add(newAlarm);
+                alarmArrayAdapter.notifyDataSetChanged();
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
+            }
+        } else if (requestCode == ALARM_UPDATE_RESULT) {
+            if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
                 alarms.add(newAlarm);

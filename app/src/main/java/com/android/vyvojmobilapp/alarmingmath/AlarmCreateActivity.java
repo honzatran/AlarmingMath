@@ -58,6 +58,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
         setContentView(R.layout.activity_alarm_create);
 
         qrDatabase = new QrDatabase(this);
@@ -74,16 +75,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         //defaultne nastavi napr. pri spusteni v 15:27 cas 3:27, nasleduje fix
         picker.setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 
-        nameField = (EditText)findViewById(R.id.name_field);
-        activeSwitch = (Switch)findViewById(R.id.active_switch);
-        vibrateSwitch = (Switch)findViewById(R.id.vibrate_switch);
-        snoozeDelaySpinner = (Spinner)findViewById(R.id.snoozeDelay_spinner);
-        lengthOfRingingSpinner = (Spinner)findViewById(R.id.lengthOfRinging_spinner);
-        methodSpinner = (Spinner)findViewById(R.id.method_spinner);
-        difficultySpinner = (Spinner)findViewById(R.id.difficulty_spinner);
-        qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
-        qrNewScan = (Button) findViewById(R.id.qrNewScan);
-        qrSpinner.setAdapter(qrSpinnerAdapter);
+        initializeWidget();
 
         methodSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
@@ -117,9 +109,50 @@ public class AlarmCreateActivity extends ActionBarActivity {
                 }
         );
         volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
-        
+
+        if (intent.hasExtra(Alarm.ALARM_FLAG)) {
+            Alarm alarm = Alarm.extractAlarmFromIntent(intent);
+
+            volumeSeekbar.setProgress(alarm.getVolume());
+            picker.setCurrentHour(alarm.getHour());
+            picker.setCurrentMinute(alarm.getMinute());
+
+            nameField.setText(alarm.getName());
+            activeSwitch.setChecked(alarm.isActive());
+            vibrateSwitch.setChecked(alarm.isVibrate());
+            String[] snoozeStrings = getResources().getStringArray(R.array.snoozeDelaySpinnerItems);
+            for (int i = 0; i < snoozeStrings.length; i++) {
+                if (Integer.parseInt(snoozeStrings[i]) == alarm.getSnoozeDelay())
+                    snoozeDelaySpinner.setSelection(i);
+            }
+            methodSpinner.setSelection(alarm.getMethodId());
+            if (alarm.getLengthOfRinging() == -1)
+                lengthOfRingingSpinner.setSelection(5);
+            else
+                lengthOfRingingSpinner.setSelection(alarm.getLengthOfRinging()/30);
+            difficultySpinner.setSelection(alarm.getDifficulty());
+            //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
+            //qrNewScan = (Button) findViewById(R.id.qrNewScan);
+            //qrSpinner.setAdapter(qrSpinnerAdapter);
+
+        }
+
         setUpDaysButtons();
     }
+
+    private void initializeWidget() {
+        nameField = (EditText)findViewById(R.id.name_field);
+        activeSwitch = (Switch)findViewById(R.id.active_switch);
+        vibrateSwitch = (Switch)findViewById(R.id.vibrate_switch);
+        snoozeDelaySpinner = (Spinner)findViewById(R.id.snoozeDelay_spinner);
+        lengthOfRingingSpinner = (Spinner)findViewById(R.id.lengthOfRinging_spinner);
+        methodSpinner = (Spinner)findViewById(R.id.method_spinner);
+        difficultySpinner = (Spinner)findViewById(R.id.difficulty_spinner);
+        qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
+        qrNewScan = (Button) findViewById(R.id.qrNewScan);
+        qrSpinner.setAdapter(qrSpinnerAdapter);
+    }
+
 
     private void setUpDaysButtons() {
         Resources res = getResources();
@@ -295,7 +328,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
             final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
             ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
         }
-
     }
 
     public void onQrNewScan(View view) {
