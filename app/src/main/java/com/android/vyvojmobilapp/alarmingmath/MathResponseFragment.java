@@ -14,13 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link MathResponseFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MathResponseFragment
         extends Fragment
         implements View.OnClickListener {
@@ -34,10 +27,8 @@ public class MathResponseFragment
     private OnMathFragmentInteractionListener mListener;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
      * @param alarm
-     * @return A new instance of fragment MathResponseFragment.
+     * @return nova instance fragmentu MathResponseFragment.
      */
     public static MathResponseFragment newInstance(Alarm alarm) {
         MathResponseFragment fragment = new MathResponseFragment();
@@ -49,7 +40,7 @@ public class MathResponseFragment
     }
 
     public MathResponseFragment() {
-        // Required empty public constructor
+        // public constructor
     }
 
     @Override
@@ -67,7 +58,6 @@ public class MathResponseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         _rootView = inflater.inflate(R.layout.fragment_math_response, container, false);
 
         // zakladni info budiku
@@ -136,17 +126,6 @@ public class MathResponseFragment
 
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnMathFragmentInteractionListener {
         public void onFragmentInteraction(Uri uri);
     }

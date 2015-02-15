@@ -10,23 +10,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * Use the {@link SimpleResponseFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+// fragment pro zakladni odpoved na budik
 public class SimpleResponseFragment extends Fragment {
     private static final String ARG_ALARM = "alarm";
 
     private Alarm alarm;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * K vytvoreni nove instance tohoto fragmentu za pouziti pripravenych parametru.
      *
      * @param alarm Budik, ktery prave zvoni.
-     * @return A new instance of fragment SimpleFragment.
+     * @return Nova instance fragmentu SimpleFragment.
      */
     public static SimpleResponseFragment newInstance(Alarm alarm) {
         SimpleResponseFragment fragment = new SimpleResponseFragment();
@@ -38,7 +32,7 @@ public class SimpleResponseFragment extends Fragment {
     }
 
     public SimpleResponseFragment() {
-        // Required empty public constructor
+        // je potreba prazdny public constructor
     }
 
     @Override
@@ -53,11 +47,10 @@ public class SimpleResponseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_simple_response, container, false);
 
-        // marketa - zobrazit pri buzeni chci jen nazev a cas:
+        // zobrazit pri buzeni chci jen nazev a cas:
         TextView nameTV = (TextView)view.findViewById(R.id.simple_response_name);
         if (alarm.getName() != null)      // nastavit nazev pouze v pripade, ze je nejaky zadan
             nameTV.setText(alarm.getName());

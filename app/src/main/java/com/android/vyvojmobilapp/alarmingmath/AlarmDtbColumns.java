@@ -3,7 +3,7 @@ package com.android.vyvojmobilapp.alarmingmath;
 import android.provider.BaseColumns;
 
 /**
- * Created by honza on 12/16/14.
+ * Pro databazi budiku
  */
 public class AlarmDtbColumns implements BaseColumns{
     public static String name = "AlarmTable";

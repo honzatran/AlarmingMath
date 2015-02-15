@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by marketa on 13.2.15.
  * Vypis seznamu budiku v main activity
  */
 public class AlarmListAdapter extends ArrayAdapter<Alarm> {
@@ -77,14 +76,10 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
             method = context.getString(R.string.listItem_method_qr);
         holder.listItem_method.setText(method);
 
-        // todo vybrat obrazky a odkomentovat nasledujici 4 radky.
-        // a v listview_...xml zmenit v to do text na img view
         if (alarm.isActive())
             holder.listItem_imgActive.setImageResource(R.drawable.ic_alarm_on_black_48dp);
-//            holder.listItem_imgActive.setImageDrawable();
         else
             holder.listItem_imgActive.setImageResource(R.drawable.ic_alarm_off_grey600_48dp);
-//           holder.listItem_imgActive.setImageDrawable();
 
         return row;
     }

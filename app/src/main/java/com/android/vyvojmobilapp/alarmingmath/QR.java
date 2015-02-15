@@ -2,7 +2,6 @@ package com.android.vyvojmobilapp.alarmingmath;
 
 /**
  * Pomocna trida pro ulozeni QR nebo barcode scanu
- * Created by Petr on 29.1.2015.
  */
 public class QR {
     private String hint;

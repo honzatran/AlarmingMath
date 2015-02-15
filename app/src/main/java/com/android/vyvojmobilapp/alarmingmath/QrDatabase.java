@@ -48,7 +48,6 @@ public class QrDatabase extends SQLiteOpenHelper {
 
     private ContentValues convertToContentValue(QR qr) {
         ContentValues values = new ContentValues();
-
         values.put(QrDtbColumns.column_hint, qr.getHint());
         values.put(QrDtbColumns.column_code, qr.getCode());
         return values;

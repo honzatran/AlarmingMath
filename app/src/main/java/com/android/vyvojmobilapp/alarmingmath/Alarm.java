@@ -8,7 +8,7 @@ import android.os.Parcelable;
 import java.util.Calendar;
 
 /**
- * Created by honza on 12/15/14.
+ * budik
  */
 
 //parcelable = lze připojit k intentu jako "extras"
@@ -44,7 +44,6 @@ public class Alarm implements Parcelable, Cloneable {
     String name;
     QR qr;
 
-    // replacing one shot
     boolean oneShot;
 
     // rika jestli je budik repeating, tj. furt se opakuje
@@ -55,7 +54,7 @@ public class Alarm implements Parcelable, Cloneable {
     DayRecorder days;
 
     /**
-     * constructor for creating alarm from AlarmActivity
+     * constructor pro vytvoreni z AlarmActivity
      * @param hour
      * @param minute
      * @param ringtoneUri
@@ -93,7 +92,7 @@ public class Alarm implements Parcelable, Cloneable {
 
 
     /**
-     * constructor for creating alarm from database
+     * constructor pro vytvoreni z databaze
      * @param hour
      * @param minute
      * @param id
@@ -193,13 +192,12 @@ public class Alarm implements Parcelable, Cloneable {
     /**
      * Vytvoří snoozing verzi budíku, ktera je odlozena o Alarm.snoozeDelay minut
      *
-     * @author Tran Tuan Hiep
      * @param currDay soucasny den v tydnu
      * @return snoozing verze budíku
      * @throws CloneNotSupportedException
      */
     public Alarm getSnoozingVersion(int currDay) throws CloneNotSupportedException {
-        // honza: naclonujeme si budik at nemusime kopirovat vsechno rucne
+        // naclonujeme si budik at nemusime kopirovat vsechno rucne
         Alarm snoozeAlarm = this.clone();
         snoozeAlarm.minute += snoozeAlarm.snoozeDelay;
         snoozeAlarm.days = new DayRecorder();
@@ -286,7 +284,7 @@ public class Alarm implements Parcelable, Cloneable {
 
     /**
      * vytvori parcel z alarmu
-     * @return Parcel containing current instance of alarm
+     * @return Parcel obsahujici aktualni instanci alarmu
      */
     public Parcel createParcel() {
         Parcel parcel = Parcel.obtain();
@@ -299,7 +297,7 @@ public class Alarm implements Parcelable, Cloneable {
     /**
      * extrahuje alarm z intentu
      * @param intent i
-     * @return alarm saved on intent.
+     * @return alarm ulozeny na intent
      */
     public static Alarm extractAlarmFromIntent(Intent intent) {
         byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);

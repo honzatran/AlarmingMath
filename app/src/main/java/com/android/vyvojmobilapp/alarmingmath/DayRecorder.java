@@ -4,7 +4,6 @@ import android.os.Parcelable;
 import android.os.Parcel;
 
 /**
- * Created by honza on 1/22/15.
  * udrzuje prehled o aktivovanych dnech
  */
 

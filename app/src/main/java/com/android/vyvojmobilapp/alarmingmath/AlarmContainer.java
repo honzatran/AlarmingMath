@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by honza on 1/10/15.
  * nova trida kompozice arraylistu a databaze
  */
 public class AlarmContainer extends ArrayList<Alarm> {
@@ -21,7 +20,7 @@ public class AlarmContainer extends ArrayList<Alarm> {
         for (Alarm alarm : alarms) {
             // pridavame jenom budiky, ktery nevznikly jako odlozeny
             if (!alarm.isSnoozingAlarm()) {
-                // honza: volame funkci predka abychom nedavali duplikatne furt do databaze
+                // volame funkci predka abychom nedavali duplikatne furt do databaze
                 super.add(alarm);
             }
         }

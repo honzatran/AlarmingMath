@@ -107,14 +107,19 @@ public class MathExpression {
         switch (difficulty) {
             case 0:     // easy - mala nasobilka, "male" +, -, /
                 op = randomOperator();
-                expr = randomEasyEpxression(op, -1);
+                expr = randomExpression(op, -1);
                 break;
-            case 1:     // medium - male operace se 3 operandy
+            case 1:     // medium - 1 operace se 2 velkymi operandy
+                op = randomOperator();
+                expr = randomExpression(op, -1);
+                break;
             case 2:     // hard - 2 operace s vetsimi cisly
-                op = randomOperator();
-                pom = randomEasyEpxression(op, -1);
-                op = randomOperator();
-                expr = randomEasyEpxression2(op, pom);
+                do {
+                    op = randomOperator();
+                    pom = randomExpression(op, -1);
+                    op = randomOperator();
+                    expr = randomHardExpression(op, pom);
+                } while (Integer.parseInt(evaluate(expr)) < 0);
                 break;
         }
 
@@ -139,7 +144,7 @@ public class MathExpression {
      * @param x - prvni operand, pokud x == -1, pak se nahodne generuje
      * @return vraci triprvkovy arrayList (dva operandy a operator)
      */
-    private ArrayList<String> randomEasyEpxression(char op, int x) {
+    private ArrayList<String> randomExpression(char op, int x) {
         int y;
         int x1, y1; // pomocne
         Random rnd = new Random();
@@ -157,12 +162,12 @@ public class MathExpression {
             boundMulti = 11;
             boundDiv = 11;
         }
-//		else if (difficulty == 1) {
-//			boundPlus = 51;
-//			boundMinus = 101;
-//			boundMulti = 21;
-//			boundDiv = 21;
-//		}
+		else if (difficulty == 1) { // stredni
+			boundPlus = 51;
+			boundMinus = 101;
+			boundMulti = 21;
+			boundDiv = 21;
+		}
         else if (difficulty == 2) {      // tezke
             boundPlus = 101;
             boundMinus = 201;
@@ -205,9 +210,9 @@ public class MathExpression {
      * @param xAL - postfixovy arrayList, ke kteremu vygeneruju jeste kousek prikaldu
      * @return finalni vyraz
      */
-    private ArrayList<String> randomEasyEpxression2(char op, ArrayList<String> xAL) {
+    private ArrayList<String> randomHardExpression(char op, ArrayList<String> xAL) {
         int x = Integer.parseInt(evaluate(xAL));
-        ArrayList<String> pom = randomEasyEpxression(op, x);
+        ArrayList<String> pom = randomExpression(op, x);
         ArrayList<String> e = new ArrayList<>();
 
         String first = pom.get(0);      // prvni prvek  - cislo

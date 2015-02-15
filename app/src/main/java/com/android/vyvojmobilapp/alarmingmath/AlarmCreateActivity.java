@@ -127,6 +127,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         nameField.setText(alarm.getName());
         activeSwitch.setChecked(alarm.isActive());
         vibrateSwitch.setChecked(alarm.isVibrate());
+
         String[] snoozeStrings = getResources().getStringArray(R.array.snoozeDelaySpinnerItems);
         for (int i = 0; i < snoozeStrings.length; i++) {
             if (Integer.parseInt(snoozeStrings[i]) == alarm.getSnoozeDelay())
@@ -151,9 +152,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
 
         }
-        //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
-        //qrNewScan = (Button) findViewById(R.id.qrNewScan);
-        //qrSpinner.setAdapter(qrSpinnerAdapter);
 
         uri = Uri.parse(alarm.getRingtoneUri());
         final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
@@ -198,19 +196,14 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_alarm_create, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -312,20 +305,19 @@ public class AlarmCreateActivity extends ActionBarActivity {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this, AlertDialog.THEME_HOLO_LIGHT);
 
-            // set prompts.xml to alertdialog builder
             alertDialogBuilder.setView(promptsView);
 
             final EditText userInput = (EditText) promptsView
                     .findViewById(R.id.editTextDialogUserInput);
 
-            // set dialog message
+            // nastav dialog message
             alertDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton(getApplicationContext().getString(R.string.OK),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
-                                    // get user input and set it to result
-                                    // edit text
+                                    // ziskej uzivatelskej vstup a nastav ho na result
+                                    // edituj text
 
                                     qrDatabase.addQr(new QR(userInput.getText().toString(), scanContent));
                                     Log.i("scanResult","after db, hint: " + qrHint);
@@ -337,9 +329,9 @@ public class AlarmCreateActivity extends ActionBarActivity {
                             });
 
 
-            // create alert dialog
+            // vytvor dialog upozorneni
             AlertDialog alertDialog = alertDialogBuilder.create();
-            // show it
+            // ukaz ho
             alertDialog.show();
         } else
         //vysledek vyberu ringtone

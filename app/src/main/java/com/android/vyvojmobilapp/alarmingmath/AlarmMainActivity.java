@@ -18,9 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-// dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
-
-// TODO podpora budiku v ruznych dnech, aktivace a deaktivace budiku + zabudovani mechanismu pro ruzny response
 public class AlarmMainActivity extends ActionBarActivity {
     private String TAG = "MAIN ACTIVITY";
     ListView alarmListView;
@@ -111,7 +108,6 @@ public class AlarmMainActivity extends ActionBarActivity {
                 break;
             case 2: //update
                 // todo no prostě to dodělat
-                //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
                 Parcel parcel = alarm.createParcel();
                 Intent intent = new Intent(this, AlarmCreateActivity.class);
                 intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
@@ -173,19 +169,14 @@ public class AlarmMainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -197,7 +188,7 @@ public class AlarmMainActivity extends ActionBarActivity {
         Log.v(TAG, "create pressed");
 
         Intent intent = new Intent(this, AlarmCreateActivity.class);
-        // honza: ceka na vysledek aktivity vytvor budik
+        // ceka na vysledek aktivity vytvor budik
         startActivityForResult(intent, ALARM_CREATE_RESULT);
     }
 
@@ -213,7 +204,7 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         if (requestCode == ALARM_CREATE_RESULT) {
             if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
-                // honza: dosel novej budik
+                // dosel novej budik
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
                 alarms.add(newAlarm);

@@ -1,7 +1,7 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 /**
- * Created by honza on 1/29/15.
+ENUM pro varianty budiku
  */
 public enum AlarmType {
     REPEATING(0), ONESHOT(1), SNOOZE(2);

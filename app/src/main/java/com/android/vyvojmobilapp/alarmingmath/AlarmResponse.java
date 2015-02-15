@@ -41,10 +41,6 @@ public class AlarmResponse extends Activity
         setContentView(R.layout.activity_alarm_response);
 
         Intent intent = getIntent();
-//        byte[] arr = intent.getByteArrayExtra(Alarm.ALARM_FLAG);
-//        Parcel parcel = Parcel.obtain();
-//        parcel.unmarshall(arr, 0, arr.length);
-//        parcel.setDataPosition(0);
 
         // extrahujeme budik z intentu
         alarm = Alarm.extractAlarmFromIntent(intent);
@@ -121,7 +117,6 @@ public class AlarmResponse extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_alarm_response, menu);
         return true;
     }
@@ -138,12 +133,8 @@ public class AlarmResponse extends Activity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -156,7 +147,7 @@ public class AlarmResponse extends Activity
      * @param view
      */
     public void dismissAlarm(View view) {
-        // honza : metoda ktera se vola po stisknuti tlacitka dismiss
+        // metoda ktera se vola po stisknuti tlacitka dismiss
         returnToNormalState();
         checkAlarmType();
         // stopneme sluzbu z ktery se spousti ResponseActivity
@@ -251,7 +242,7 @@ public class AlarmResponse extends Activity
 
     @Override
     public void onBackPressed() {
-        // honza: na stisknuti z odkladame alarm
+        // na stisknuti z odkladame alarm
         snoozeAlarm(null);
         super.onBackPressed();
     }

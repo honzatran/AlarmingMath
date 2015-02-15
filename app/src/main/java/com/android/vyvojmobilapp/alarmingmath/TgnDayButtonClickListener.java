@@ -4,14 +4,11 @@ import android.view.View;
 
 import junit.framework.Assert;
 
-/**
- * Created by honza on 1/22/15.
- * listener pro klikani dnu a activite AlarmCreate
- */
+//listener pro klikani dnu a activite AlarmCreate
 public class TgnDayButtonClickListener implements View.OnClickListener {
     DayRecorder recorder;
 
-    // seznam vsech cudliku ktery nam signalizujou den zazvoneni
+    // seznam vsech cudliku ktere nam signalizuji den zazvoneni
     static public int [] tgnDaysBtnIds =  {
             R.id.sunday_toggle_btn, R.id.monday_toggle_btn,
             R.id.tuesday_toggle_btn, R.id.wednesday_toggle_btn,

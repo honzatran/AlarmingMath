@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by honza on 12/16/14.
+ * Databaze budiku
  */
 public class AlarmDatabase extends SQLiteOpenHelper {
 

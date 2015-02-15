@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by honza on 12/15/14.
+ * Pomocna trida pro praci s budiky
  */
 public class AlarmManagerHelper extends BroadcastReceiver{
     public static final String ID = "id";
@@ -37,7 +37,6 @@ public class AlarmManagerHelper extends BroadcastReceiver{
      *                   jestli false tak se nejdriv zrusi a pote nastartuji
      */
     public static void startAlarmPendingIntent(Context context, boolean skipCancel) {
-        // Honza:
         // zrusime vsechny budiky v dtb kdyz je treba
         if (!skipCancel)
         {

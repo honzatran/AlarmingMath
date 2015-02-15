@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.util.Log;
 
 /**
- * Created by honza on 1/24/15.
  * factory na vytvareni reakci(simple, QR, matematickej priklad) na budik
  */
 public class FragmentResponseFactory {
