@@ -64,7 +64,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         qrDatabase = new QrDatabase(this);
 
 
-         qrSpinnerAdapter = new ArrayAdapter<>(this,
+        qrSpinnerAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_item, qrDatabase.getQRs());
         qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
@@ -155,10 +155,12 @@ public class AlarmCreateActivity extends ActionBarActivity {
             ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
 
             int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
+            daysListener.recorder = alarm.getDays();
+
             for (int i = 0; i < 7; i++) {
                 if (alarm.days.isDaySet(i)) {
                     ToggleButton tgBtn = (ToggleButton) findViewById(tgnDaysIds[i]);
-                    tgBtn.setActivated(true);
+                    tgBtn.setChecked(true);
                 }
             }
         }
@@ -180,7 +182,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
 
     private void setUpDaysButtons() {
-        Resources res = getResources();
         int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
 
         daysListener = new TgnDayButtonClickListener();
@@ -245,8 +246,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
         DayRecorder dayRecorder = daysListener.getRecorder();
         Log.v(TAG, "mask of days" + dayRecorder.getMask());
         byte mask = dayRecorder.getMask();
-
-
 
         AlarmType alarmType;
         // budik nebyl naplanovanej na zadnej den
@@ -338,10 +337,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
             AlertDialog alertDialog = alertDialogBuilder.create();
             // show it
             alertDialog.show();
-
-
-
-
         } else
         //vysledek vyberu ringtone
         if (requestCode == 0 && resultCode == RESULT_OK) {
@@ -367,6 +362,5 @@ public class AlarmCreateActivity extends ActionBarActivity {
         qrSpinnerAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, new ArrayList<QR>());
         qrSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         qrSpinner.setAdapter(qrSpinnerAdapter);
-
     }
 }
