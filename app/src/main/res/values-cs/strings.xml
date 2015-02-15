@@ -50,7 +50,7 @@
 
     <!-- qr response -->
     <string name="scan">Skenuj!</string>
-    <string name="qr_scan_text">Item to scan:</string>
+    <string name="qr_scan_text">Item ke skenování:</string>
     <string name="dialog_setQrHint">Zadejte popis Qr kodu</string>
     <string name="dialog_confirm">Uložit</string>
 
