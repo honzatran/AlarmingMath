@@ -29,7 +29,7 @@ public class AlarmMainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AlarmDatabase alarmDatabase = new AlarmDatabase(this);
+        final AlarmDatabase alarmDatabase = new AlarmDatabase(this);
 
         //--debugging purposes
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
@@ -46,12 +46,13 @@ public class AlarmMainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 Alarm alarm = alarmArrayAdapter.getItem(arg2);
+                AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 if (alarm.isActive()) {
-                    AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
+                    alarmDatabase.setAlarmActive(false, alarm.getId());
                     alarm.active = false;
                 } else {
+                    alarmDatabase.setAlarmActive(true, alarm.getId());
                     alarm.active = true;
-                    AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 }
                 // todo je potřeba zabít příslušnej intent
                 //AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
