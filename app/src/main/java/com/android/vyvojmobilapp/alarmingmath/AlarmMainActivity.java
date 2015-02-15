@@ -54,11 +54,8 @@ public class AlarmMainActivity extends ActionBarActivity {
                     alarmDatabase.setAlarmActive(true, alarm.getId());
                     alarm.active = true;
                 }
-                // todo je potřeba zabít příslušnej intent
-                //AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 alarmArrayAdapter.notifyDataSetChanged();
                 AlarmManagerHelper.startAlarmPendingIntent(getApplicationContext(), true);
-                //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
             }});
 
         //registrujeme tridy AlarmMainActivity jako obsluznou pro alarmListView (metody jsou nize)
@@ -69,6 +66,9 @@ public class AlarmMainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        alarms = new AlarmContainer(new AlarmDatabase(this));
+        alarmArrayAdapter = new AlarmListAdapter(this, R.layout.listview_main_item, alarms);
+        alarmListView.setAdapter(alarmArrayAdapter);
     }
 
     //vytvoreni kontextoveho menu pro poloznky v seznamu budiku
@@ -114,6 +114,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                 break;
             case 2: //update
                 // todo no prostě to dodělat
+                //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
                 break;
             case 3: //delete
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);

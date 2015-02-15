@@ -229,6 +229,7 @@ public class AlarmResponse extends Activity
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         // deaktivujeme alarm
         dtb.setAlarmActive(false, alarm.getId());
+        alarm.active = false;
         AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
 
