@@ -108,63 +108,66 @@ public class AlarmCreateActivity extends ActionBarActivity {
                     }
                 }
         );
-        volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
 
         setUpDaysButtons();
 
         if (intent.hasExtra(Alarm.ALARM_FLAG)) {
-            Alarm alarm = Alarm.extractAlarmFromIntent(intent);
-
-            volumeSeekbar.setProgress(alarm.getVolume());
-            picker.setCurrentHour(alarm.getHour());
-            picker.setCurrentMinute(alarm.getMinute());
-
-            nameField.setText(alarm.getName());
-            activeSwitch.setChecked(alarm.isActive());
-            vibrateSwitch.setChecked(alarm.isVibrate());
-            String[] snoozeStrings = getResources().getStringArray(R.array.snoozeDelaySpinnerItems);
-            for (int i = 0; i < snoozeStrings.length; i++) {
-                if (Integer.parseInt(snoozeStrings[i]) == alarm.getSnoozeDelay())
-                    snoozeDelaySpinner.setSelection(i);
-            }
-            methodSpinner.setSelection(alarm.getMethodId());
-            if (alarm.getLengthOfRinging() == -1)
-                lengthOfRingingSpinner.setSelection(5);
-            else
-                lengthOfRingingSpinner.setSelection(alarm.getLengthOfRinging()/30);
-            difficultySpinner.setSelection(alarm.getDifficulty());
-
-            if (alarm.getMethodId() == 2) {
-                qrNewScan.setActivated(true);
-                qrSpinner.setActivated(true);
-                for(int i=0; i < qrSpinnerAdapter.getCount(); i++){
-                    if(qrSpinnerAdapter.getItem(i).toString().equals(alarm.getQr().toString())){
-                        qrSpinner.setSelection(i);
-                        break;
-                    }
-                }
-
-
-            }
-            //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
-            //qrNewScan = (Button) findViewById(R.id.qrNewScan);
-            //qrSpinner.setAdapter(qrSpinnerAdapter);
-
-            uri = Uri.parse(alarm.getRingtoneUri());
-            final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
-            ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
-
-            int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
-            daysListener.recorder = alarm.getDays();
-
-            for (int i = 0; i < 7; i++) {
-                if (alarm.days.isDaySet(i)) {
-                    ToggleButton tgBtn = (ToggleButton) findViewById(tgnDaysIds[i]);
-                    tgBtn.setChecked(true);
-                }
-            }
+            setUpWidgetsFromAlarm(intent);
         }
 
+    }
+
+    private void setUpWidgetsFromAlarm(Intent intent) {
+        Alarm alarm = Alarm.extractAlarmFromIntent(intent);
+
+        volumeSeekbar.setProgress(alarm.getVolume());
+        picker.setCurrentHour(alarm.getHour());
+        picker.setCurrentMinute(alarm.getMinute());
+
+        nameField.setText(alarm.getName());
+        activeSwitch.setChecked(alarm.isActive());
+        vibrateSwitch.setChecked(alarm.isVibrate());
+        String[] snoozeStrings = getResources().getStringArray(R.array.snoozeDelaySpinnerItems);
+        for (int i = 0; i < snoozeStrings.length; i++) {
+            if (Integer.parseInt(snoozeStrings[i]) == alarm.getSnoozeDelay())
+                snoozeDelaySpinner.setSelection(i);
+        }
+        methodSpinner.setSelection(alarm.getMethodId());
+        if (alarm.getLengthOfRinging() == -1)
+            lengthOfRingingSpinner.setSelection(5);
+        else
+            lengthOfRingingSpinner.setSelection(alarm.getLengthOfRinging()/30);
+        difficultySpinner.setSelection(alarm.getDifficulty());
+
+        if (alarm.getMethodId() == 2) {
+            qrNewScan.setActivated(true);
+            qrSpinner.setActivated(true);
+            for(int i=0; i < qrSpinnerAdapter.getCount(); i++){
+                if(qrSpinnerAdapter.getItem(i).toString().equals(alarm.getQr().toString())){
+                    qrSpinner.setSelection(i);
+                    break;
+                }
+            }
+
+
+        }
+        //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
+        //qrNewScan = (Button) findViewById(R.id.qrNewScan);
+        //qrSpinner.setAdapter(qrSpinnerAdapter);
+
+        uri = Uri.parse(alarm.getRingtoneUri());
+        final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+        ((Button)findViewById(R.id.ringtonePicker)).setText(ringtone.getTitle(this));
+
+        int[] tgnDaysIds = TgnDayButtonClickListener.tgnDaysBtnIds;
+        daysListener.recorder = alarm.getDays();
+
+        for (int i = 0; i < 7; i++) {
+            if (alarm.days.isDaySet(i)) {
+                ToggleButton tgBtn = (ToggleButton) findViewById(tgnDaysIds[i]);
+                tgBtn.setChecked(true);
+            }
+        }
     }
 
     private void initializeWidget() {
@@ -178,6 +181,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
         qrNewScan = (Button) findViewById(R.id.qrNewScan);
         qrSpinner.setAdapter(qrSpinnerAdapter);
+        volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekBar);
     }
 
 
@@ -231,7 +235,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         QR qr = new QR("","");
         if (method == Alarm.QR_CODE){
             if (qrSpinner.getSelectedItemPosition() == Spinner.INVALID_POSITION){
-                Toast.makeText(this, "No QR code selected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.noqr_selected, Toast.LENGTH_SHORT).show();
                 return;
             }
             qr = qrSpinnerAdapter.getItem(qrSpinner.getSelectedItemPosition());
@@ -284,7 +288,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
     public void onRingtonePickerClick(View view) {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Vyberte melodii pro budík:");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, R.string.ringtonePickerTitle);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_ALARM);
@@ -317,7 +321,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
             // set dialog message
             alertDialogBuilder
                     .setCancelable(false)
-                    .setPositiveButton("OK",
+                    .setPositiveButton(getApplicationContext().getString(R.string.OK),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
                                     // get user input and set it to result
@@ -352,7 +356,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
     public void onQrNewScan(View view) {
         IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setPrompt("Naskenujte kód z předmětu");
+        integrator.setPrompt(getApplicationContext().getString(R.string.qrScanPrompt));
         integrator.initiateScan(); // `this` is the current Activity
     }
 

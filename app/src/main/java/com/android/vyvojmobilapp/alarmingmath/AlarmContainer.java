@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Created by honza on 1/10/15.
- * @author Tran Tuan Hiep
  * nova trida kompozice arraylistu a databaze
  */
 public class AlarmContainer extends ArrayList<Alarm> {

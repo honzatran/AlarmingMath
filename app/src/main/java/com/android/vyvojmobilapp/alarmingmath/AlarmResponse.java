@@ -34,7 +34,6 @@ public class AlarmResponse extends Activity
     // to co se stara o spusteni wakeLockReleaser
     private Handler handler;
 
-    private int WAKELOCK_TIMEOUT = 60 * 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

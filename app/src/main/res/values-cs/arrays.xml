@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lengthOfRingingSpinnerItems">
+        <item>30 s</item>
+        <item>60 s</item>
+        <item>90 s</item>
+        <item>120 s</item>
+        <item>snooze spoždění</item>
+    </string-array>
+
+    <string-array name="methodSpinnerItems">
+        <item>tlačítko</item>
+        <item>vyřešení příkladu</item>
+        <item>skenování QR</item>
+    </string-array>
+
+    <string-array name="difficultySpinnerItems">
+        <item>jednoduché</item>
+        <item>střední</item>
+        <item>těžké</item>
+    </string-array>
+
+</resources>

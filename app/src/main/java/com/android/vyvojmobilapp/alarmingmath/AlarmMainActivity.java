@@ -1,6 +1,9 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Parcel;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -83,10 +86,10 @@ public class AlarmMainActivity extends ActionBarActivity {
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
-        menu.setHeaderTitle("Options for alarm at " + alarm.toString());
-        menu.add(1, 1, 1, "Details");
-        menu.add(1, 2, 2, "Update");
-        menu.add(1, 3, 3, "Delete");
+        menu.setHeaderTitle(getString(R.string.alarm_click_options) + alarm.toString());
+        menu.add(1, 1, 1, R.string.details);
+        menu.add(1, 2, 2, R.string.update);
+        menu.add(1, 3, 3, R.string.delete_alarm);
     }
 
     // This method is called when user selects an Item in the Context menu
@@ -101,18 +104,9 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         switch (itemId){
             case 1: //Details
-                Toast.makeText(this, "Info:\nČas: "+alarm.toString()+
-                                "\nName: "+alarm.getName()+
-                                "\nid: "+alarm.getId()+
-                                "\nRingtone: "+alarm.getRingtoneUri()+
-                                "\nSnooze delay: "+alarm.getSnoozeDelay()+
-                                "\nLength of ringing: "+alarm.getLengthOfRinging()+
-                                "\nMethod: "+alarm.getMethodId()+
-                                "\nVolume: "+alarm.getVolume()+
-                                "\nActive: "+alarm.isActive()+
-                                "\nVibrate: "+alarm.isVibrate() +
-                                "\nDays mask:" + alarm.getDays().getMask() +
-                                "\nOne shot:" + alarm.isSnoozingAlarm() ,
+                String toastMsg = createInfoToastMsg(alarm);
+
+                Toast.makeText(this, toastMsg,
                         Toast.LENGTH_LONG).show();
                 break;
             case 2: //update
@@ -130,7 +124,8 @@ public class AlarmMainActivity extends ActionBarActivity {
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important
-                Toast.makeText(this, "Budík v čase "+alarm.toString()+" smazán.", Toast.LENGTH_SHORT).show();
+                String msg = String.format(getString(R.string.delete_msg_alarm), alarm.toString());
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
                 AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 break;
             default:
@@ -140,7 +135,40 @@ public class AlarmMainActivity extends ActionBarActivity {
         return true;
     }
 
+    private String createInfoToastMsg(Alarm alarm) {
+        StringBuilder msg = new StringBuilder(getString(R.string.informations) + "\n");
+        msg.append(String.format("%s %s\n", getString(R.string.name_textview), alarm.getName()));
+        msg.append(String.format("%s %s\n", getString(R.string.time), alarm.toString()));
+        msg.append(String.format("%s %s %s\n", getString(R.string.snoozeDelay_text), alarm.getSnoozeDelay(),
+                getString(R.string.minute)));
 
+        int lenghtOfRinging = alarm.getLengthOfRinging() + 30;
+        msg.append(String.format("%s %s %s\n", getString(R.string.lengthOfRinging_text),
+                lenghtOfRinging, getString(R.string.second)));
+
+
+        int resMethodField;
+        switch (alarm.getMethodId()) {
+            case 0:
+                resMethodField = R.string.simple;
+                break;
+            case 1:
+                resMethodField = R.string.math;
+                break;
+            default:
+                resMethodField = R.string.qr;
+                break;
+        }
+        msg.append(String.format("%s %s\n", getString(R.string.method_text), getString(resMethodField)));
+
+        Ringtone ringtone = RingtoneManager.getRingtone(this, Uri.parse(alarm.getRingtoneUri()));
+        msg.append(String.format("%s %s\n", getString(R.string.ringing_text), ringtone.getTitle(this)));
+        msg.append(String.format("%s %s\n", getString(R.string.vibrate_text),
+                alarm.isVibrate() ? getString(R.string.yes) : getString(R.string.no)));
+
+
+        return msg.toString();
+    }
 
 
     @Override

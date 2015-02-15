@@ -61,6 +61,7 @@ public class SimpleResponseFragment extends Fragment {
         TextView nameTV = (TextView)view.findViewById(R.id.simple_response_name);
         if (alarm.getName() != null)      // nastavit nazev pouze v pripade, ze je nejaky zadan
             nameTV.setText(alarm.getName());
+
         TextView timeTV = (TextView)view.findViewById(R.id.simple_response_time);
         timeTV.setText(alarm.toString());
 
