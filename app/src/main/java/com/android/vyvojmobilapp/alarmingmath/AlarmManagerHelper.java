@@ -93,6 +93,13 @@ public class AlarmManagerHelper extends BroadcastReceiver{
                 continue ALARM_LOOP;
             }
 
+            if (cal.getFirstDayOfWeek() == Calendar.SUNDAY)  {
+                Log.v(TAG, "US");
+
+            } else {
+                Log.v(TAG, "EU:" + cal.getFirstDayOfWeek());
+                cal.setFirstDayOfWeek(Calendar.SUNDAY);
+            }
 
             // to same akorat ted kontrolujeme jestli budik byl naplanovan do konce tydne(soboty)
             // to je furt ten samy tyden jako ma Calender.getInstance();
@@ -102,6 +109,8 @@ public class AlarmManagerHelper extends BroadcastReceiver{
                     cal.set(Calendar.DAY_OF_WEEK, i);
                     PendingIntent sender = createPendingIntent(context, alarm);
                     // naplanuje budik na spravnej cas
+                    Log.v(TAG, "cal time millis " + cal.get(Calendar.DAY_OF_WEEK) + " "
+                            + cal.get(Calendar.HOUR_OF_DAY) + ":"  + cal.get(Calendar.MINUTE));
                     alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 
                     continue ALARM_LOOP;

@@ -164,17 +164,6 @@ public class Alarm implements Parcelable, Cloneable {
     }
     public boolean isVibrate() { return vibrate; }
 
-    // marketa: pro popis budiku v seznamu (main)
-    public String getMethodToString() {
-        String ret = null;
-        if (methodId == 1)
-            ret = "Math";
-        else if (methodId == 2)
-            ret = "QR";
-
-        return ret;
-    }
-
     public DayRecorder getDays() {
         return days;
     }

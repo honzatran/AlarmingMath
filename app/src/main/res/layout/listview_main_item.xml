@@ -51,19 +51,18 @@
         android:textStyle="italic"
         />
 
-    <!-- todo tady misto text view dat image view -->
-    <TextView
+    <ImageView
         android:id="@+id/listItem_imgActive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:gravity="center_vertical"
-        android:text="IMG"/>
-
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"/>
+    <!--tohle tam bylo, je to čistě věc estetiky, mně se to líbí takhle :)
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentTop="true"-->
 
 
 </RelativeLayout>

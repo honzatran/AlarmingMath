@@ -1,6 +1,7 @@
 package com.android.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
+import android.os.Parcel;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+// dodelat mazani budiku, plus budiky v ruznych dnech a nejakej ringtone
+
+// TODO podpora budiku v ruznych dnech, aktivace a deaktivace budiku + zabudovani mechanismu pro ruzny response
 public class AlarmMainActivity extends ActionBarActivity {
     private String TAG = "MAIN ACTIVITY";
     ListView alarmListView;
@@ -21,14 +25,16 @@ public class AlarmMainActivity extends ActionBarActivity {
     ArrayAdapter<Alarm> alarmArrayAdapter2;
     AlarmListAdapter alarmArrayAdapter;
     int counter;
+    static final int ALARM_CREATE_RESULT = 1;
+    static final int ALARM_UPDATE_RESULT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AlarmDatabase alarmDatabase = new AlarmDatabase(this);
+        final AlarmDatabase alarmDatabase = new AlarmDatabase(this);
 
-        //--debugging purposes (mazani databaze - nutno pri zmene sloupcu)
+        //--debugging purposes
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
 
         alarms = new AlarmContainer(alarmDatabase);
@@ -38,6 +44,22 @@ public class AlarmMainActivity extends ActionBarActivity {
 
         alarmListView = (ListView)findViewById(R.id.alarm_list);
         alarmListView.setAdapter(alarmArrayAdapter);
+        alarmListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Alarm alarm = alarmArrayAdapter.getItem(arg2);
+                AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
+                if (alarm.isActive()) {
+                    alarmDatabase.setAlarmActive(false, alarm.getId());
+                    alarm.active = false;
+                } else {
+                    alarmDatabase.setAlarmActive(true, alarm.getId());
+                    alarm.active = true;
+                }
+                alarmArrayAdapter.notifyDataSetChanged();
+                AlarmManagerHelper.startAlarmPendingIntent(getApplicationContext(), true);
+            }});
 
         //registrujeme tridy AlarmMainActivity jako obsluznou pro alarmListView (metody jsou nize)
         registerForContextMenu(alarmListView);
@@ -47,6 +69,9 @@ public class AlarmMainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        alarms = new AlarmContainer(new AlarmDatabase(this));
+        alarmArrayAdapter = new AlarmListAdapter(this, R.layout.listview_main_item, alarms);
+        alarmListView.setAdapter(alarmArrayAdapter);
     }
 
     //vytvoreni kontextoveho menu pro poloznky v seznamu budiku
@@ -58,9 +83,10 @@ public class AlarmMainActivity extends ActionBarActivity {
         AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
-        menu.setHeaderTitle(getString(R.string.alarmContextMenu) + alarm.toString());
-        menu.add(1, 1, 1, R.string.details);
-        menu.add(1, 2, 2, R.string.delete_alarm);
+        menu.setHeaderTitle("Options for alarm at " + alarm.toString());
+        menu.add(1, 1, 1, "Details");
+        menu.add(1, 2, 2, "Update");
+        menu.add(1, 3, 3, "Delete");
     }
 
     // This method is called when user selects an Item in the Context menu
@@ -89,18 +115,32 @@ public class AlarmMainActivity extends ActionBarActivity {
                                 "\nOne shot:" + alarm.isSnoozingAlarm() ,
                         Toast.LENGTH_LONG).show();
                 break;
-            case 2: //delete
+            case 2: //update
+                // todo no prostě to dodělat
+                //Toast.makeText(getApplicationContext(), alarm. , Toast.LENGTH_SHORT).show();
+                Parcel parcel = alarm.createParcel();
+                Intent intent = new Intent(this, AlarmCreateActivity.class);
+                intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 alarms.remove(alarm);
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
+                startActivityForResult(intent, ALARM_UPDATE_RESULT);
+                break;
+            case 3: //delete
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
+                alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important
                 Toast.makeText(this, "Budík v čase "+alarm.toString()+" smazán.", Toast.LENGTH_SHORT).show();
                 AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 break;
             default:
+
         }
 
         return true;
     }
+
+
 
 
     @Override
@@ -125,22 +165,14 @@ public class AlarmMainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Spusti aktivitu pro vytvoreni noveho budiku (pomoci startActivityForResult).
-     * @param view
-     */
     public void showCreateAlarm(View view) {
         Log.v(TAG, "create pressed");
 
         Intent intent = new Intent(this, AlarmCreateActivity.class);
         // honza: ceka na vysledek aktivity vytvor budik
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, ALARM_CREATE_RESULT);
     }
 
-    /**
-     * Vyprazdni databazi budiku.
-     * @param view
-     */
     public void clearAlarms(View view) {
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         alarms.clear();
@@ -151,9 +183,17 @@ public class AlarmMainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1) {
+        if (requestCode == ALARM_CREATE_RESULT) {
             if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
                 // honza: dosel novej budik
+                AlarmManagerHelper.cancelAlarmPendingIntents(this);
+                Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
+                alarms.add(newAlarm);
+                alarmArrayAdapter.notifyDataSetChanged();
+                AlarmManagerHelper.startAlarmPendingIntent(this, true);
+            }
+        } else if (requestCode == ALARM_UPDATE_RESULT) {
+            if (resultCode == RESULT_OK && data.hasExtra(Alarm.ALARM_FLAG)) {
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 Alarm newAlarm = data.getExtras().getParcelable(Alarm.ALARM_FLAG);
                 alarms.add(newAlarm);
