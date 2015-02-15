@@ -137,6 +137,14 @@ public class AlarmCreateActivity extends ActionBarActivity {
             if (alarm.getMethodId() == 2) {
                 qrNewScan.setActivated(true);
                 qrSpinner.setActivated(true);
+                for(int i=0; i < qrSpinnerAdapter.getCount(); i++){
+                    if(qrSpinnerAdapter.getItem(i).toString().equals(alarm.getQr().toString())){
+                        qrSpinner.setSelection(i);
+                        break;
+                    }
+                }
+
+
             }
             //qrSpinner = (Spinner)findViewById(R.id.qr_spinner);
             //qrNewScan = (Button) findViewById(R.id.qrNewScan);
