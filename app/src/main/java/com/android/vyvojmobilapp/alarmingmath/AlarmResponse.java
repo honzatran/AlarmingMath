@@ -74,6 +74,7 @@ public class AlarmResponse extends Activity
         }
 
 
+
         wakeLockReleaser = new Runnable() {
             @Override
             public void run() {
@@ -86,9 +87,14 @@ public class AlarmResponse extends Activity
         };
 
         handler = new Handler();
+        int wakeLockTimeOut;
+        if (alarm.getLengthOfRinging() == -1) {
+            wakeLockTimeOut = (alarm.getSnoozeDelay() * 60 - 2) * 1000;
+        } else {
+            wakeLockTimeOut = (alarm.getLengthOfRinging() + 30) * 1000;
+        }
 
-        // za WAKELOCK_TIMEOUT minut spustime wakeLockReleaser
-        handler.postDelayed(wakeLockReleaser, WAKELOCK_TIMEOUT);
+        handler.postDelayed(wakeLockReleaser, wakeLockTimeOut);
     }
 
     @Override

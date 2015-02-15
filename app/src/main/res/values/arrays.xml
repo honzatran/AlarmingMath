@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="snoozeDelaySpinnerItems">
-        <item>1</item>
         <item>5</item>
         <item>10</item>
         <item>15</item>
@@ -14,7 +13,7 @@
         <item>60 s</item>
         <item>90 s</item>
         <item>120 s</item>
-        <item>until dismiss</item>
+        <item>snooze delay</item>
     </string-array>
 
     <string-array name="methodSpinnerItems">

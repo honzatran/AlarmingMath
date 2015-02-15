@@ -133,11 +133,9 @@ public class Alarm implements Parcelable, Cloneable {
     }
 
 
-    // honza: gettery settery snad jasny
     public int getHour() {
         return hour;
     }
-
     public int getMinute() {
         return minute;
     }
@@ -193,11 +191,11 @@ public class Alarm implements Parcelable, Cloneable {
     }
 
     /**
-     * Returns snoozing version of alarm, which is 5 minutes later then alarm
+     * Vytvoří snoozing verzi budíku, ktera je odlozena o Alarm.snoozeDelay minut
      *
      * @author Tran Tuan Hiep
-     * @param currDay current day in week
-     * @return snoozing version of alarm, which is delayed 5
+     * @param currDay soucasny den v tydnu
+     * @return snoozing verze budíku
      * @throws CloneNotSupportedException
      */
     public Alarm getSnoozingVersion(int currDay) throws CloneNotSupportedException {
@@ -225,8 +223,6 @@ public class Alarm implements Parcelable, Cloneable {
     }
 
 
-    // nasleduji metody impementující rozhraní Parcelable - vygenerovano pomoci http://www.parcelabler.com
-    // honza: tady jsem to nechal vygenerovat znovu kvuli dalsi polozce
     protected Alarm(Parcel in) {
         hour = in.readInt();
         minute = in.readInt();
@@ -289,7 +285,7 @@ public class Alarm implements Parcelable, Cloneable {
 
 
     /**
-     * create Parcel from alarm
+     * vytvori parcel z alarmu
      * @return Parcel containing current instance of alarm
      */
     public Parcel createParcel() {
@@ -301,7 +297,7 @@ public class Alarm implements Parcelable, Cloneable {
     }
 
     /**
-     * extract an alarm from intent
+     * extrahuje alarm z intentu
      * @param intent i
      * @return alarm saved on intent.
      */

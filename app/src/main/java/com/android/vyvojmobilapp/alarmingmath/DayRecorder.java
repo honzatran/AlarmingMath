@@ -5,7 +5,7 @@ import android.os.Parcel;
 
 /**
  * Created by honza on 1/22/15.
- * keeps track of actived days
+ * udrzuje prehled o aktivovanych dnech
  */
 
 /**
@@ -26,6 +26,12 @@ public class DayRecorder implements Parcelable {
         this.mask = mask;
     }
 
+    /**
+     * dle b aktivuje nebo deaktivuje dany den
+     * 0 Nedele, 1 Pondeli ... 6 Sobota
+     * @param b aktivace -> true, deaktivace -> false
+     * @param i poradi dne v tydny od, 0 <= i < 7
+     */
     void setDay(boolean b, int i) {
         if (b) {
             mask |= (1 << i);
@@ -34,11 +40,21 @@ public class DayRecorder implements Parcelable {
         }
     }
 
+    /**
+     * zjisti jestli je dany den aktivovany
+     * 0 Nedele, 1 Pondeli ... 6 Sobota
+     * @param i poradi dne v tydny od, 0 <= i < 7
+     * @return true iff je den i aktivovany jinak false
+     */
     boolean isDaySet(int i) {
         int tmp = 1 << i;
         return ((mask & tmp) != 0);
     }
 
+    /**
+     *
+     * @return vrati masku recordu
+     */
     public byte getMask() {
         return mask;
     }
