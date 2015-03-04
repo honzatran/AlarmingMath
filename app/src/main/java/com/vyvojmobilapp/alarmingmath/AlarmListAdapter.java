@@ -1,14 +1,15 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
 
 /**
  * Vypis seznamu budiku v main activity
@@ -61,7 +62,7 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
                 context.getString(R.string.friday),
                 context.getString(R.string.saturday)};
         for (int i = 0; i < 7; i++) {        // zjistim kazdy den (od nedele do soboty)
-            if (alarm.days.isDaySet(i)) {
+            if (alarm.getDays().isDaySet(i)) {
                 repeat.append(d[i] + " ");
             }
         }

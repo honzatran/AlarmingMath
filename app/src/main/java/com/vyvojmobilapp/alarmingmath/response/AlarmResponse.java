@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,7 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+
+import com.vyvojmobilapp.alarmingmath.R;
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
+import com.vyvojmobilapp.alarmingmath.alarm.AlarmType;
+import com.vyvojmobilapp.alarmingmath.response.math.MathResponseFragment;
+import com.vyvojmobilapp.alarmingmath.response.qr.QrResponseFragment;
 
 import java.util.Calendar;
 
@@ -225,7 +231,7 @@ public class AlarmResponse extends Activity
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         // deaktivujeme alarm
         dtb.setAlarmActive(false, alarm.getId());
-        alarm.active = false;
+        alarm.setActive(false);
         AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
 

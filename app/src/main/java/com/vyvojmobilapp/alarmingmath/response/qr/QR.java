@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response.qr;
 
 /**
  * Pomocna trida pro ulozeni QR nebo barcode scanu

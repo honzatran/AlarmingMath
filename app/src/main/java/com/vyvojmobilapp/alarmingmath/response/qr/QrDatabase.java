@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response.qr;
 
 import android.content.ContentValues;
 import android.content.Context;

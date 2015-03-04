@@ -1,10 +1,8 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.alarm.create;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,22 +17,25 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.vyvojmobilapp.alarmingmath.AlarmMainActivity;
+import com.vyvojmobilapp.alarmingmath.R;
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.alarm.AlarmType;
+import com.vyvojmobilapp.alarmingmath.alarm.DayRecorder;
+import com.vyvojmobilapp.alarmingmath.response.qr.QR;
+import com.vyvojmobilapp.alarmingmath.response.qr.QrDatabase;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 public class AlarmCreateActivity extends ActionBarActivity {
@@ -89,8 +90,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
                             difficultySpinner.setEnabled(true);
                             qrSpinner.setEnabled(false);
                             qrNewScan.setEnabled(false);
-
-
                         } else if (position == 2) {
                             difficultySpinner.setEnabled(false);
                             qrSpinner.setEnabled(true);
@@ -131,7 +130,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
 
         nameField.setText(alarm.getName());
 
-        alarm.active = true;
+        alarm.setActive(true);
         activeSwitch.setChecked(alarm.isActive());
         vibrateSwitch.setChecked(alarm.isVibrate());
 
@@ -168,7 +167,7 @@ public class AlarmCreateActivity extends ActionBarActivity {
         daysListener.recorder = alarm.getDays();
 
         for (int i = 0; i < 7; i++) {
-            if (alarm.days.isDaySet(i)) {
+            if (daysListener.recorder.isDaySet(i)) {
                 ToggleButton tgBtn = (ToggleButton) findViewById(tgnDaysIds[i]);
                 tgBtn.setChecked(true);
             }

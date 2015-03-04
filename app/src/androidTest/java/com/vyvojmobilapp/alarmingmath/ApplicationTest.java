@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

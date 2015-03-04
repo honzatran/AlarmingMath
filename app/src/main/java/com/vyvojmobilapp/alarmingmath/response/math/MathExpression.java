@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response.math;
 
 import java.util.ArrayList;
 import java.util.Random;

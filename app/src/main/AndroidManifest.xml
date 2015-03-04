@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.vyvojmobilapp.alarmingmath" >
+    package="com.vyvojmobilapp.alarmingmath" >
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -25,18 +25,18 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmManagerHelper" >
+        <receiver android:name=".response.AlarmManagerHelper" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".AlarmService"
+            android:name=".response.AlarmService"
             android:enabled="true" />
 
         <activity
-            android:name=".AlarmCreateActivity"
+            android:name=".alarm.create.AlarmCreateActivity"
             android:label="@string/title_activity_alarm_create"
             android:parentActivityName=".AlarmMainActivity" >
             <meta-data
@@ -44,12 +44,12 @@
                 android:value=".AlarmMainActivity" />
         </activity>
         <activity
-            android:name=".AlarmResponse"
+            android:name=".response.AlarmResponse"
             android:label="@string/title_activity_alarm_response" >
         </activity>
 
         <service
-            android:name=".RingtonePlayerService"
+            android:name=".response.RingtonePlayerService"
             android:enabled="true"
             android:exported="true" >
         </service>

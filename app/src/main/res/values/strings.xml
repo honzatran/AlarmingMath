@@ -48,6 +48,7 @@
     <string name="scan">Scan!</string>
     <string name="qr_scan_text">Item to scan:</string>
     <string name="dialog_setQrHint">Set description of the QR code (i.e. \"toothpaste\")</string>
+    <string name="qrScanPrompt">Scan code from: </string>
     <string name="dialog_confirm">Save</string>
     <string name="qrScanWrong">Wrong item! Try it again.</string>
 

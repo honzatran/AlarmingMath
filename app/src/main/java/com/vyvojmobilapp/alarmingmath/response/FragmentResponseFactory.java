@@ -1,7 +1,12 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response;
 
 import android.app.Fragment;
 import android.util.Log;
+
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.response.math.MathResponseFragment;
+import com.vyvojmobilapp.alarmingmath.response.qr.QrResponseFragment;
+import com.vyvojmobilapp.alarmingmath.response.simple.SimpleResponseFragment;
 
 /**
  * factory na vytvareni reakci(simple, QR, matematickej priklad) na budik

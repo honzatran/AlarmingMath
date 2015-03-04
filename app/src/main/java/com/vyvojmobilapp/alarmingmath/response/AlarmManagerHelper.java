@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
 import android.util.Log;
+
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
+import com.vyvojmobilapp.alarmingmath.alarm.DayRecorder;
 
 import java.util.Calendar;
 import java.util.List;

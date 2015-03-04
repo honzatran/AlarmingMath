@@ -1,11 +1,10 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.alarm;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Calendar;
+import com.vyvojmobilapp.alarmingmath.response.qr.QR;
 
 /**
  * budik
@@ -160,6 +159,10 @@ public class Alarm implements Parcelable, Cloneable {
         return active;
     }
     public boolean isVibrate() { return vibrate; }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public DayRecorder getDays() {
         return days;

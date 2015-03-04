@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.response.qr;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.response.AlarmResponse;
+import com.vyvojmobilapp.alarmingmath.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 

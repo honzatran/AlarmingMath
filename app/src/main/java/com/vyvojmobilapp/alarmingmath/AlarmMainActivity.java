@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath;
 
 import android.content.Intent;
 import android.media.Ringtone;
@@ -17,6 +17,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
+import com.vyvojmobilapp.alarmingmath.alarm.create.AlarmCreateActivity;
+import com.vyvojmobilapp.alarmingmath.response.AlarmManagerHelper;
 
 public class AlarmMainActivity extends ActionBarActivity {
     private String TAG = "MAIN ACTIVITY";
@@ -52,10 +57,10 @@ public class AlarmMainActivity extends ActionBarActivity {
                 AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 if (alarm.isActive()) {
                     alarmDatabase.setAlarmActive(false, alarm.getId());
-                    alarm.active = false;
+                    alarm.setActive(false);
                 } else {
                     alarmDatabase.setAlarmActive(true, alarm.getId());
-                    alarm.active = true;
+                    alarm.setActive(true);
                 }
                 alarmArrayAdapter.notifyDataSetChanged();
                 AlarmManagerHelper.startAlarmPendingIntent(getApplicationContext(), true);

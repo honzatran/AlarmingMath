@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.alarm;
 
 import android.os.Parcelable;
 import android.os.Parcel;
@@ -31,7 +31,7 @@ public class DayRecorder implements Parcelable {
      * @param b aktivace -> true, deaktivace -> false
      * @param i poradi dne v tydny od, 0 <= i < 7
      */
-    void setDay(boolean b, int i) {
+    public void setDay(boolean b, int i) {
         if (b) {
             mask |= (1 << i);
         } else {
@@ -45,7 +45,7 @@ public class DayRecorder implements Parcelable {
      * @param i poradi dne v tydny od, 0 <= i < 7
      * @return true iff je den i aktivovany jinak false
      */
-    boolean isDaySet(int i) {
+    public boolean isDaySet(int i) {
         int tmp = 1 << i;
         return ((mask & tmp) != 0);
     }

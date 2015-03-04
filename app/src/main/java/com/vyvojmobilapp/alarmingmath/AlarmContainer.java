@@ -1,4 +1,7 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath;
+
+import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
+import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
 
 import java.util.ArrayList;
 import java.util.List;

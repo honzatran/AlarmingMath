@@ -1,6 +1,9 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.alarm.create;
 
 import android.view.View;
+
+import com.vyvojmobilapp.alarmingmath.R;
+import com.vyvojmobilapp.alarmingmath.alarm.DayRecorder;
 
 import junit.framework.Assert;
 

@@ -1,4 +1,4 @@
-package com.android.vyvojmobilapp.alarmingmath;
+package com.vyvojmobilapp.alarmingmath.alarm;
 
 /**
 ENUM pro varianty budiku
@@ -16,7 +16,7 @@ public enum AlarmType {
         return  id;
     }
 
-    static AlarmType getEnum(int id) {
+    public static AlarmType getEnum(int id) {
         switch (id)  {
             case 0:
                 return REPEATING;

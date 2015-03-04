@@ -1,7 +1,7 @@
 <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.vyvojmobilapp.alarmingmath.SimpleResponseFragment">
+    tools:context="com.vyvojmobilapp.alarmingmath.response.simple.SimpleResponseFragment">
 
     &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
     <TextView android:layout_width="match_parent" android:layout_height="match_parent"
@@ -20,7 +20,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.android.vyvojmobilapp.alarmingmath.SimpleResponseFragment"
+    tools:context="com.vyvojmobilapp.alarmingmath.response.simple.SimpleResponseFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="0dp"
