@@ -40,7 +40,6 @@
     <string name="dismiss_alarm">Dismiss alarm</string>
 
     <!-- math response -->
-    <string name="math_response_alarmName">Alarm!</string>
     <string name="math_solve">Solve:</string>
     <string name="math_check_result">Check result</string>
 
@@ -49,7 +48,6 @@
     <string name="qr_scan_text">Item to scan:</string>
     <string name="dialog_setQrHint">Set description of the QR code (i.e. \"toothpaste\")</string>
     <string name="qrScanPrompt">Scan code from: </string>
-    <string name="dialog_confirm">Save</string>
     <string name="qrScanWrong">Wrong item! Try it again.</string>
 
     <string name="details">Details</string>
@@ -61,23 +59,13 @@
     <string name="title_activity_alarm_create">New Alarm</string>
     <string name="title_activity_alarm_update">Update alarm</string>
     <string name="title_activity_alarm_response">Alarm Response</string>
-    <string name="title_activity_alarm_response_qr">Alarm Response QR</string>
 
-    <string name="hello_world">Hello world!</string>
-
-    <string name="alarm_ring">Alarm is ringing!</string>
-    <string name="alarmNameHint">Alarm name</string>
-    <string name="qrNewScanText">New scan</string>
-    <string name="ringtonePickerText">Pick ringtone...</string>
-
-
-    <string name="qrClearScansText">Clear all</string>
     <string name="noqr_selected">No qr selected!</string>
-    <string name="OK">Ok</string>
+    <string name="OK">OK</string>
     <string name="update">Update alarm</string>
     <string name="alarm_click_options">Options for alarm at</string>
     <string name="informations">Informations</string>
-    <string name="time">Time:</string>
+    <string name="time">Time</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="simple">Simple</string>
@@ -88,5 +76,9 @@
     <string name="delete_msg_alarm">Alarm at %s erased</string>
     <string name="math_succ_solved">You\'re awake!</string>
     <string name="math_wrong_answer">Wrong answer!! Try it again.</string>
+    <string name="ringtonePickerTitle">Choose ringtone</string>
+    <string name="name">Name</string>
+    <string name="method">Method</string>
+    <string name="repetition">Repeat</string>
 
 </resources>

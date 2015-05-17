@@ -41,10 +41,7 @@
     <string name="dismiss_alarm">Zastav budík</string>
 
 
-    <string name="hello_world">Hello world!</string>
-
     <!-- math response -->
-    <string name="math_response_alarmName">Budík!</string>
     <string name="math_solve">Vyřeš:</string>
     <string name="math_check_result">Zkontroluj výsledek</string>
 
@@ -52,7 +49,6 @@
     <string name="scan">Skenuj!</string>
     <string name="qr_scan_text">Item ke skenování:</string>
     <string name="dialog_setQrHint">Zadejte popis Qr kodu</string>
-    <string name="dialog_confirm">Uložit</string>
 
     <!-- menu -->
     <string name="action_settings">Nastavení</string>
@@ -64,32 +60,15 @@
     <string name="app_name">Alarming Math</string>
     <string name="title_activity_alarm_create">Nový budík</string>
     <string name="title_activity_alarm_response">Budík zvoní</string>
-    <string name="title_activity_alarm_response_qr">QR budík</string>
     <string name="title_activity_alarm_update">Úprava budíku</string>
-
-    <string name="alarm_ring">Budík zvoní!</string>
-
-    <string name="alarmNameHint">Název budiku</string>
-    <string name="qrNewScanText">Nový scan</string>
-    <string name="ringtonePickerText">Vyberte vyzvánění...</string>
-
-    <string name="qrClearScansText">Vymaž vše</string>
-
 
     <!--///dfs-->
 
-    <string name="activate">Aktivuj budík</string>
-    <string name="deactivate">Deaktivuj budík</string>
     <string name="details">Podrobnosti</string>
 
-    <string name="math_title">Matika zvoní…</string>
-    <string name="math_example"></string>
-    <string name="math_ringing">Matika zvoní</string>
     <string name="ringtonePickerTitle">Vyberte melodii pro budík:</string>
     <string name="qrScanPrompt">Naskenujte kód z předmětu: </string>
-    <string name="qrRingingText">Pro vypnutí budíku naskenujte kód z následujícího předmětu: </string>
     <string name="qrScanWrong">Špatný předmět! Zkuste to znova.</string>
-    <string name="alarmContextMenu">"Budík v čase "</string>
     <string name="noqr_selected">Žádný qr nebyl vybrán!</string>
     <string name="OK">Ok</string>
     <string name="update">Uprav budík</string>
@@ -104,6 +83,11 @@
     <string name="delete_msg_alarm">Budík v %s smazán</string>
     <string name="math_succ_solved">Jste vzhůru!</string>
     <string name="math_wrong_answer">Špatná odpověd!! Zkuste to znova.</string>
+    <string name="qr">QR</string>
+    <string name="time">Čas</string>
+    <string name="name">Jméno</string>
+    <string name="method">Metoda</string>
+    <string name="repetition">Opakování</string>
 
 
 </resources>

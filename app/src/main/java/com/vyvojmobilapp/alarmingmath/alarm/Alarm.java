@@ -18,16 +18,6 @@ public class Alarm implements Parcelable, Cloneable {
     public static final int QR_CODE = 2;
 
     public static final String ALARM_FLAG = "alarm";
-    public static final String HOUR = "hour";
-    public static final String MINUTES = "minutes";
-    public static final String RINGTONE = "ringtone";
-    public static final String SNOOZE_DELAY = "snooze";
-    public static final String LENGTH_OF_RINGING = "length";
-    public static final String METHOD_ID = "method";
-    public static final String VOLUME = "volume";
-    public static final String IS_ACTIVE = "active";
-    public static final String IS_VIBRATE = "vibrate";
-    public static final String NAME = "name";
 
     int hour;
     int minute;

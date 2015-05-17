@@ -5,7 +5,7 @@
 
     <TextView
         android:id="@+id/listItem_time"
-        android:text="cas"
+        android:text="@string/time"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/listItem_alarmName"
-        android:text="jmeno"
+        android:text="@string/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/listItem_method"
-        android:text="metoda"
+        android:text="@string/method"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/listItem_time"
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/listItem_repeat"
-        android:text="opakovani"
+        android:text="@string/repetition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/listItem_method"

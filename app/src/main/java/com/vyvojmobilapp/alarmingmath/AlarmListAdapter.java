@@ -30,7 +30,7 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        AlarmHolder holder = null;
+        AlarmHolder holder;
 
         if(row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();

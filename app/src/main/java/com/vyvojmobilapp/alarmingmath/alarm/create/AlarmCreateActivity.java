@@ -306,7 +306,6 @@ public class AlarmCreateActivity extends ActionBarActivity {
         //vysledek qr scanu
         if ((scanResult != null) && (scanResult.getContents() != null)) {
             final String scanContent = scanResult.getContents();
-            String scanFormat = scanResult.getFormatName();
 
             LayoutInflater li = LayoutInflater.from(this);
             View promptsView = li.inflate(R.layout.fragment_qr_set_hint, null);

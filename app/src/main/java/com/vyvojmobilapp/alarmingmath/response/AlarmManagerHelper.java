@@ -19,12 +19,6 @@ import java.util.List;
  * Pomocna trida pro praci s budiky
  */
 public class AlarmManagerHelper extends BroadcastReceiver{
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String TIMEHOUR = "timeHour";
-    public static final String TIMEMINUTE = "timeMinute";
-    public static final String TONE = "alarmTone";
-
     private static String TAG = AlarmManagerHelper.class.getName();
 
     @Override
