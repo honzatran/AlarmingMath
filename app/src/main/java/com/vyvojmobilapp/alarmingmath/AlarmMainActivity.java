@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.*;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
-import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
 import com.vyvojmobilapp.alarmingmath.alarm.create.AlarmCreateActivity;
 import com.vyvojmobilapp.alarmingmath.response.AlarmManagerHelper;
 
@@ -37,12 +38,11 @@ public class AlarmMainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final AlarmDatabase alarmDatabase = new AlarmDatabase(this);
 
         //--debugging purposes
         //getApplicationContext().deleteDatabase("alarmDatabase.db");
 
-        alarms = new AlarmContainer(alarmDatabase);
+        alarms = new AlarmContainer();
         alarmArrayAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 alarms);
         alarmArrayAdapter = new AlarmListAdapter(this, R.layout.listview_main_item, alarms);
@@ -56,10 +56,10 @@ public class AlarmMainActivity extends ActionBarActivity {
                 Alarm alarm = alarmArrayAdapter.getItem(arg2);
                 AlarmManagerHelper.cancelAlarmPendingIntents(getApplicationContext());
                 if (alarm.isActive()) {
-                    alarmDatabase.setAlarmActive(false, alarm.getId());
+                    Alarm.setAlarmActive(false, alarm.getId());
                     alarm.setActive(false);
                 } else {
-                    alarmDatabase.setAlarmActive(true, alarm.getId());
+                    Alarm.setAlarmActive(true, alarm.getId());
                     alarm.setActive(true);
                 }
                 alarmArrayAdapter.notifyDataSetChanged();
@@ -74,7 +74,7 @@ public class AlarmMainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        alarms = new AlarmContainer(new AlarmDatabase(this));
+        alarms = new AlarmContainer();
         alarmArrayAdapter = new AlarmListAdapter(this, R.layout.listview_main_item, alarms);
         alarmListView.setAdapter(alarmArrayAdapter);
     }
@@ -84,35 +84,37 @@ public class AlarmMainActivity extends ActionBarActivity {
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        //magic pro ziskani pozice polozky v seznamu
-        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_context, menu);
 
-        Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
-        menu.setHeaderTitle(getString(R.string.alarm_click_options) + alarm.toString());
-        menu.add(1, 1, 1, R.string.details);
-        menu.add(1, 2, 2, R.string.update);
-        menu.add(1, 3, 3, R.string.delete_alarm);
+        //magic pro ziskani pozice polozky v seznamu
+        //AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        //Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
+        //menu.setHeaderTitle(getString(R.string.alarm_click_options) + alarm.toString());
+        //menu.add(1, 1, 1, R.string.details);
+        //menu.add(1, 2, 2, R.string.update);
+        //menu.add(1, 3, 3, R.string.delete_alarm);
     }
 
     // This method is called when user selects an Item in the Context menu
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         //index polozky v menu, nikoliv budiku v seznamu!
-        int itemId = item.getItemId();
+        //int itemId = item.getItemId();
 
-        //same magic..
-        AdapterView.AdapterContextMenuInfo aInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        Alarm alarm = alarmArrayAdapter.getItem(aInfo.position);
+        //AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        Alarm alarm = alarmArrayAdapter.getItem(info.position);
 
-        switch (itemId){
-            case 1: //Details
+        switch (item.getItemId()) {
+            case R.id.details:
                 String toastMsg = createInfoToastMsg(alarm);
 
                 Toast.makeText(this, toastMsg,
                         Toast.LENGTH_LONG).show();
                 break;
-            case 2: //update
-                // todo no prostě to dodělat
+            case R.id.update_alarm:
                 Parcel parcel = alarm.createParcel();
                 Intent intent = new Intent(this, AlarmCreateActivity.class);
                 intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
@@ -121,7 +123,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                 AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 startActivityForResult(intent, ALARM_UPDATE_RESULT);
                 break;
-            case 3: //delete
+            case R.id.delete_alarm:
                 AlarmManagerHelper.cancelAlarmPendingIntents(this);
                 alarms.remove(alarm); //mozna bych tohle pole nejak provazal s databazi
                 alarmArrayAdapter.notifyDataSetChanged();  // important
@@ -130,7 +132,7 @@ public class AlarmMainActivity extends ActionBarActivity {
                 AlarmManagerHelper.startAlarmPendingIntent(this, true);
                 break;
             default:
-
+                return super.onContextItemSelected(item);
         }
 
         return true;
@@ -169,24 +171,6 @@ public class AlarmMainActivity extends ActionBarActivity {
 
 
         return msg.toString();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void showCreateAlarm(View view) {

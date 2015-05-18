@@ -4,8 +4,8 @@ package com.vyvojmobilapp.alarmingmath.response.qr;
  * Pomocna trida pro ulozeni QR nebo barcode scanu
  */
 public class QR {
-    private String hint;
-    private String code;
+    private String hint = "";
+    private String code = "";
 
     /**
      * Konstruktor.

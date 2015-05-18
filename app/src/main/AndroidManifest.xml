@@ -6,15 +6,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <receiver
-        android:name=".AlarmReceiver"
-        android:process=":remote" />
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name="com.orm.SugarApp">
         <activity
             android:name=".AlarmMainActivity"
             android:label="@string/app_name" >
@@ -25,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".response.AlarmManagerHelper" >
+        <receiver
+            android:name=".response.AlarmManagerHelper"
+            android:process=":remote">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -43,6 +42,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AlarmMainActivity" />
         </activity>
+
         <activity
             android:name=".response.AlarmResponse"
             android:label="@string/title_activity_alarm_response" >
@@ -50,9 +50,14 @@
 
         <service
             android:name=".response.RingtonePlayerService"
-            android:enabled="true"
-            android:exported="true" >
+            android:enabled="true">
         </service>
+
+        <meta-data android:name="DATABASE" android:value="alarms.db" />
+        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.vyvojmobilapp.alarmingmath.alarm" />
+
     </application>
 
 </manifest>

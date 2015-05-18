@@ -52,6 +52,7 @@
 
     <string name="details">Details</string>
     <string name="delete_alarm">Delete alarm</string>
+    <string name="update_alarm">Update alarm</string>
 
     <!-- menu -->
     <string name="action_settings">Settings</string>

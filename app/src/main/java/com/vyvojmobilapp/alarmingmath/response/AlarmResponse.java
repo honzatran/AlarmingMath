@@ -18,7 +18,6 @@ import android.view.WindowManager;
 
 import com.vyvojmobilapp.alarmingmath.R;
 import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
-import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
 import com.vyvojmobilapp.alarmingmath.alarm.AlarmType;
 import com.vyvojmobilapp.alarmingmath.response.math.MathResponseFragment;
 import com.vyvojmobilapp.alarmingmath.response.qr.QrResponseFragment;
@@ -137,17 +136,6 @@ public class AlarmResponse extends Activity
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * metoda, ktera zrusi budik na zaklade interakce s uzivatelem
      * @param view
@@ -192,9 +180,8 @@ public class AlarmResponse extends Activity
 
             checkAlarmType();
 
-            AlarmDatabase dtb = new AlarmDatabase(this);
             // pridame novy budik
-            dtb.addAlarm(snoozedAlarm);
+            Alarm.addAlarm(snoozedAlarm);
             AlarmManagerHelper.startAlarmPendingIntent(this, false);
             // stopne servicu z ktery jsme spousteli activitu a ukoncime tuhle aktivitu
             stopService(new Intent(getApplicationContext(), AlarmService.class));
@@ -227,10 +214,9 @@ public class AlarmResponse extends Activity
      * deaktivuje budik
      */
     private void reactToOneShotAlarm() {
-        AlarmDatabase dtb = new AlarmDatabase(this);
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
         // deaktivujeme alarm
-        dtb.setAlarmActive(false, alarm.getId());
+        Alarm.setAlarmActive(false, alarm.getId());
         alarm.setActive(false);
         AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
@@ -240,9 +226,8 @@ public class AlarmResponse extends Activity
      * vymaze budik z dtb
      */
     private void reactToSnoozingAlarm() {
-        AlarmDatabase dtb = new AlarmDatabase(this);
         AlarmManagerHelper.cancelAlarmPendingIntents(this);
-        dtb.deleteAlarm(alarm.getId());
+        Alarm.deleteAlarm(alarm.getId());
         AlarmManagerHelper.startAlarmPendingIntent(this, true);
     }
 

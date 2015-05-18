@@ -9,7 +9,6 @@ import android.os.Parcel;
 import android.util.Log;
 
 import com.vyvojmobilapp.alarmingmath.alarm.Alarm;
-import com.vyvojmobilapp.alarmingmath.alarm.database.AlarmDatabase;
 import com.vyvojmobilapp.alarmingmath.alarm.DayRecorder;
 
 import java.util.Calendar;
@@ -41,8 +40,7 @@ public class AlarmManagerHelper extends BroadcastReceiver{
             cancelAlarmPendingIntents(context);
         }
         // nacteme budiky z dtb
-        AlarmDatabase alarmDatabase = new AlarmDatabase(context);
-        List<Alarm> alarms = alarmDatabase.getAlarms();
+        List<Alarm> alarms = Alarm.getAlarms();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
 
         if (alarms == null) {
@@ -135,8 +133,7 @@ public class AlarmManagerHelper extends BroadcastReceiver{
      * @param context context aplikace
      */
     public static void cancelAlarmPendingIntents(Context context) {
-        AlarmDatabase alarmDatabase = new AlarmDatabase(context);
-        List<Alarm> alarms = alarmDatabase.getAlarms();
+        List<Alarm> alarms = Alarm.getAlarms();
 
         if (alarms == null) {
             return;
@@ -161,7 +158,7 @@ public class AlarmManagerHelper extends BroadcastReceiver{
         Intent intent = new Intent(context, AlarmService.class);
 
         intent.putExtra(Alarm.ALARM_FLAG, parcel.marshall());
-        return PendingIntent.getService(context, (int)alarm.getId(), intent,
+        return PendingIntent.getService(context, (int) (long) alarm.getId(), intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

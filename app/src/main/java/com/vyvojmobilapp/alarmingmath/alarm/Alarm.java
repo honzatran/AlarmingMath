@@ -1,17 +1,21 @@
 package com.vyvojmobilapp.alarmingmath.alarm;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.orm.SugarRecord;
 import com.vyvojmobilapp.alarmingmath.response.qr.QR;
+
+import java.util.List;
 
 /**
  * budik
  */
 
 //parcelable = lze připojit k intentu jako "extras"
-public class Alarm implements Parcelable, Cloneable {
+public class Alarm extends SugarRecord<Alarm> implements Parcelable, Cloneable  {
     //definice konstant pro metody buzeni
     public static final int NO_TASK = 0;
     public static final int MATH = 1;
@@ -32,15 +36,21 @@ public class Alarm implements Parcelable, Cloneable {
     boolean vibrate;
     String name;
     QR qr;
+    DayRecorder days;
 
-    boolean oneShot;
+    String qr_code;
+    String qr_hint;
+    byte mask;
 
     // rika jestli je budik repeating, tj. furt se opakuje
     // nebo jestli je oneShot zazvoni jednou a pak se deaktivuje
     // nebo jestli je snooze zazvoni jednou a smaze se z databaze
     AlarmType alarmType;
 
-    DayRecorder days;
+    boolean oneShot;
+
+    public Alarm() {
+    }
 
     /**
      * constructor pro vytvoreni z AlarmActivity
@@ -77,59 +87,18 @@ public class Alarm implements Parcelable, Cloneable {
         this.days = days;
         this.alarmType = alarmType;
         this.qr = qr;
+
+        this.mask = days.getMask();
+        this.qr_hint = qr.getHint();
+        this.qr_code = qr.getCode();
+        //this.save();
     }
-
-
-    /**
-     * constructor pro vytvoreni z databaze
-     * @param hour
-     * @param minute
-     * @param id
-     * @param ringtoneUri
-     * @param snoozeDelay
-     * @param lengthOfRinging
-     * @param methodId
-     * @param difficulty
-     * @param volume
-     * @param active
-     * @param vibrate
-     * @param name
-     * @param days
-     */
-    public Alarm(
-            int hour, int minute, long id,
-            String ringtoneUri, int snoozeDelay, int lengthOfRinging,
-            int methodId, int difficulty, int volume,
-            boolean active, boolean vibrate, String name,
-            DayRecorder days, AlarmType alarmType, QR qr) {
-
-        this.hour = hour;
-        this.minute = minute;
-        this.id = id;
-        this.ringtoneUri = ringtoneUri;
-        this.snoozeDelay =snoozeDelay;
-        this.lengthOfRinging = lengthOfRinging;
-        this.methodId = methodId;
-        this.difficulty = difficulty;
-        this.volume = volume;
-        this.active = active;
-        this.vibrate = vibrate;
-        this.name = name;
-        this.days = days;
-        this.alarmType = alarmType;
-        this.qr = qr;
-    }
-
 
     public int getHour() {
         return hour;
     }
     public int getMinute() {
         return minute;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public void setId(long id) {
@@ -212,7 +181,6 @@ public class Alarm implements Parcelable, Cloneable {
 
         return snoozeAlarm;
     }
-
 
     protected Alarm(Parcel in) {
         hour = in.readInt();
@@ -300,4 +268,49 @@ public class Alarm implements Parcelable, Cloneable {
         return Alarm.CREATOR.createFromParcel(parcel);
     }
 
+    /**
+     * Smaze budik s danym id z databaze.
+     * @param id id budiku, ktery bude smazan
+     * @return
+     */
+    public static void deleteAlarm(long id) {
+        Alarm alarm = Alarm.findById(Alarm.class, id);
+        alarm.delete();
+    }
+
+    /**
+     * Aktivuje ci deaktivuje budik s danym id v databazi.
+     * @param active
+     * @param id
+     */
+    public static void setAlarmActive(boolean active, long id) {
+        Alarm alarm = Alarm.findById(Alarm.class, id);
+        alarm.active = active;
+    }
+
+    /**
+     * Smaze vsechny ulozene budiky.
+     */
+    public static void deleteAll() {
+        Alarm.deleteAll(Alarm.class);
+    }
+
+    /**
+     * Vrati seznam vsech budiku v databazi.
+     * @return Seznam budiku v databazi.
+     */
+    public static List<Alarm> getAlarms() {
+        //return Alarm.listAll(Alarm.class);
+        List<Alarm> list = listAll(Alarm.class);
+        for (Alarm a : list) {
+            a.qr = new QR(a.qr_hint,a.qr_code);
+            a.days = new DayRecorder(a.mask);
+        }
+        return list;
+    }
+
+    public static /*long*/ void addAlarm(Alarm alarm) {
+        alarm.save();
+        //return alarm.getId();
+    }
 }

@@ -3,11 +3,9 @@
 
     <!-- main (list) -->
     <string name="create_alarm">Vytvoř budík</string>
-    <string name="delete_alarm">Smaž budík</string>
     <string name="listItem_norepeat">Žádné opakování</string>
     <string name="listItem_method_math">Math</string>
     <string name="listItem_method_qr">QR</string>
-    <string name="delete_all">Smaž všechny budíky</string>
 
     <!-- create alarm -->
     <string name="name_textview">Jméno:</string>
@@ -65,6 +63,8 @@
     <!--///dfs-->
 
     <string name="details">Podrobnosti</string>
+    <string name="delete_alarm">Smaž budík</string>
+    <string name="update_alarm">Aktualizuj budík</string>
 
     <string name="ringtonePickerTitle">Vyberte melodii pro budík:</string>
     <string name="qrScanPrompt">Naskenujte kód z předmětu: </string>

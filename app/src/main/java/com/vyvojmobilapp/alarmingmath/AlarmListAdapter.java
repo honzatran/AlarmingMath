@@ -61,9 +61,11 @@ public class AlarmListAdapter extends ArrayAdapter<Alarm> {
                 context.getString(R.string.thursday),
                 context.getString(R.string.friday),
                 context.getString(R.string.saturday)};
-        for (int i = 0; i < 7; i++) {        // zjistim kazdy den (od nedele do soboty)
-            if (alarm.getDays().isDaySet(i)) {
-                repeat.append(d[i] + " ");
+        if (alarm.getDays() != null) {
+            for (int i = 0; i < 7; i++) {        // zjistim kazdy den (od nedele do soboty)
+                if (alarm.getDays().isDaySet(i)) {
+                    repeat.append(d[i] + " ");
+                }
             }
         }
         if (repeat == null)
